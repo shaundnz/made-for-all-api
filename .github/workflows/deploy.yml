@@ -10,7 +10,7 @@ jobs:
   deploy:
     name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    environment: test
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Checkout
