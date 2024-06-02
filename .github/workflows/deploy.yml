@@ -11,9 +11,6 @@ jobs:
     name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: test
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
       - name: Checkout

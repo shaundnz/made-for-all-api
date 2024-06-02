@@ -4,6 +4,7 @@ on: pull_request
 
 jobs:
   deploy:
+    name: PR Validation
     uses: ./.github/workflows/deploy.yml
     permissions:
       id-token: write
