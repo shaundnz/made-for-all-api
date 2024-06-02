@@ -23,12 +23,30 @@ export class MadeForAllApiStack extends cdk.Stack {
       }
     );
 
+    const getTrackedPlaylistLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
+      this,
+      "get-tracked-playlist",
+      {
+        timeout: cdk.Duration.seconds(15),
+        memorySize: 128,
+        entry: "src/lambdas/sample-lambda/index.ts",
+      }
+    );
+
     const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
 
     const test = api.root.addResource("sample");
     test.addMethod(
       "GET",
       new cdk.aws_apigateway.LambdaIntegration(sampleLambda)
+    );
+
+    const playlists = api.root.addResource("playlists");
+
+    const playlist = playlists.addResource("{id}");
+    playlist.addMethod(
+      "GET",
+      new cdk.aws_apigateway.LambdaIntegration(getTrackedPlaylistLambda)
     );
   }
 }
