@@ -24,11 +24,5 @@ export class MadeForAllApiStack extends cdk.Stack {
     );
 
     const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
-
-    const test = api.root.addResource("test");
-    test.addMethod(
-      "GET",
-      new cdk.aws_apigateway.LambdaIntegration(sampleLambda)
-    );
   }
 }
