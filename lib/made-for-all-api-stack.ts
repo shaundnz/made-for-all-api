@@ -23,11 +23,7 @@ export class MadeForAllApiStack extends cdk.Stack {
       }
     );
 
-    const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api", {
-      defaultCorsPreflightOptions: {
-        allowOrigins: ["http://127.0.0.1:5173", "http://localhost:5173"],
-      },
-    });
+    const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
 
     const test = api.root.addResource("test");
     test.addMethod(
