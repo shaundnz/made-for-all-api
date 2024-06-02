@@ -1,6 +1,8 @@
-name: Validate Pull Request
+name: Deploy App To Production
 
-on: pull_request
+on:
+  push:
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -10,7 +12,7 @@ jobs:
       id-token: write
       contents: read
     with:
-      environment: test
+      environment: prod
     secrets:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
