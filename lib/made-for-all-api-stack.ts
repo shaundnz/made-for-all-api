@@ -3,50 +3,51 @@ import { Construct } from "constructs";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class MadeForAllApiStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    // The code that defines your stack goes here
+        // The code that defines your stack goes here
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'MadeForAllApiQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+        // example resource
+        // const queue = new sqs.Queue(this, 'MadeForAllApiQueue', {
+        //   visibilityTimeout: cdk.Duration.seconds(300)
+        // });
 
-    const sampleLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
-      this,
-      "sample-lambda",
-      {
-        timeout: cdk.Duration.seconds(15),
-        memorySize: 128,
-        entry: "src/lambdas/sample-lambda/index.ts",
-      }
-    );
+        const sampleLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
+            this,
+            "sample-lambda",
+            {
+                timeout: cdk.Duration.seconds(15),
+                memorySize: 128,
+                entry: "src/lambdas/sample-lambda/index.ts",
+            }
+        );
 
-    const getTrackedPlaylistLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
-      this,
-      "get-tracked-playlist",
-      {
-        timeout: cdk.Duration.seconds(15),
-        memorySize: 128,
-        entry: "src/lambdas/sample-lambda/index.ts",
-      }
-    );
+        const getTrackedPlaylistLambda =
+            new cdk.aws_lambda_nodejs.NodejsFunction(
+                this,
+                "get-tracked-playlist",
+                {
+                    timeout: cdk.Duration.seconds(15),
+                    memorySize: 128,
+                    entry: "src/lambdas/get-tracked-playlist/index.ts",
+                }
+            );
 
-    const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
+        const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
 
-    const test = api.root.addResource("sample");
-    test.addMethod(
-      "GET",
-      new cdk.aws_apigateway.LambdaIntegration(sampleLambda)
-    );
+        const test = api.root.addResource("sample");
+        test.addMethod(
+            "GET",
+            new cdk.aws_apigateway.LambdaIntegration(sampleLambda)
+        );
 
-    const playlists = api.root.addResource("playlists");
+        const playlists = api.root.addResource("playlists");
 
-    const playlist = playlists.addResource("{id}");
-    playlist.addMethod(
-      "GET",
-      new cdk.aws_apigateway.LambdaIntegration(getTrackedPlaylistLambda)
-    );
-  }
+        const playlist = playlists.addResource("{id}");
+        playlist.addMethod(
+            "GET",
+            new cdk.aws_apigateway.LambdaIntegration(getTrackedPlaylistLambda)
+        );
+    }
 }
