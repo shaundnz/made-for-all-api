@@ -2,10 +2,6 @@ import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { AccessToken } from "../../../entities";
 import { AccessTokenRepository } from "../AccessTokenRepository";
 
-const mockDynamoDBDocumentClient: any = {
-    send: jest.fn(),
-};
-
 describe("AccessTokenRepository", () => {
     let sut: AccessTokenRepository;
     let mockDynamoDBDocumentClient: any;
