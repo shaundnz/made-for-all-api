@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm tests
+        run: npm run test
 
       - name: Install AWS CDK
         run: npm i -g aws-cdk
