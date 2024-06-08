@@ -4,6 +4,8 @@ import {
     PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { AccessToken, DynamoDBItem } from "../../entities";
+import { DynamoAccessToken } from "../../entities/dynamo";
+import { AccessTokenMapper } from "../../entities/mappers";
 
 export class AccessTokenRepository {
     private dynamo: DynamoDBDocumentClient;
@@ -24,15 +26,16 @@ export class AccessTokenRepository {
             return null;
         }
 
-        const item = getAccessTokenOutput.Item as DynamoDBItem<AccessToken>;
+        const item =
+            getAccessTokenOutput.Item as DynamoDBItem<DynamoAccessToken>;
 
-        return item.Data;
+        return AccessTokenMapper.dynamoObjectToEntity(item.Data);
     }
 
     public async upsertAccessToken(accessToken: AccessToken) {
-        const item: DynamoDBItem<AccessToken> = {
+        const item: DynamoDBItem<DynamoAccessToken> = {
             PartitionKey: "AccessToken",
-            Data: accessToken,
+            Data: AccessTokenMapper.entityToDynamoObject(accessToken),
         };
 
         await this.dynamo.send(

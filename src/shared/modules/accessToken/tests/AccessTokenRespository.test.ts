@@ -52,7 +52,7 @@ describe("AccessTokenRepository", () => {
 
             expect(res).not.toBeNull();
             expect(res?.token).toBe(accessToken.token);
-            expect(res?.expiry).toBe(accessToken.expiry);
+            expect(res?.expiry).toEqual(accessToken.expiry);
         });
 
         it("should return null if the access token is not found", async () => {
@@ -103,7 +103,10 @@ describe("AccessTokenRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(PutCommand);
             expect(mockSendFunctionCallArgs.input.Item).toEqual({
                 PartitionKey: "AccessToken",
-                Data: accessToken,
+                Data: {
+                    token: accessToken.token,
+                    expiry: accessToken.expiry.toISOString(),
+                },
             });
         });
     });
