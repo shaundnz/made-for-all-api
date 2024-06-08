@@ -44,3 +44,7 @@ jobs:
 
       - name: Deploy stack
         run: cdk deploy --require-approval never
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          STATE_MACHINE_UPDATE_PLAYLISTS_ARN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
