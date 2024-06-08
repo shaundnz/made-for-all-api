@@ -10,6 +10,14 @@ on:
         required: true
       AWS_REGION:
         required: true
+      DYNAMO_ENDPOINT:
+        required: true
+      SPOTIFY_CLIENT_ID:
+        required: true
+      SPOTIFY_CLIENT_SECRET:
+        required: true
+      SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
+        required: true
 
 jobs:
   deploy:
@@ -23,6 +31,9 @@ jobs:
 
       - name: Clean install dependencies
         run: npm ci
+
+      - name: Run unit tests
+        run: npm run test
 
       - name: Install AWS CDK
         run: npm i -g aws-cdk
@@ -38,3 +49,8 @@ jobs:
 
       - name: Deploy stack
         run: cdk deploy --require-approval never
+        env:
+          DYNAMO_ENDPOINT: ${{ secrets.DYNAMO_ENDPOINT }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}

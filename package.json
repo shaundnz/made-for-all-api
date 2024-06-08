@@ -8,7 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "local:api": "sam local start-api -t ./cdk.out/MadeForAllApiStack.template.json  --env-vars env.local.json",
+    "local:invoke": "sam local invoke -t ./cdk.out/MadeForAllApiStack.template.json  --env-vars env.local.json"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.138",
@@ -21,9 +23,12 @@
     "typescript": "~5.2.2"
   },
   "dependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.590.0",
+    "@spotify/web-api-ts-sdk": "^1.2.0",
     "aws-cdk-lib": "2.103.1",
     "aws-lambda": "^1.0.7",
     "constructs": "^10.0.0",
+    "node-fetch": "^3.3.2",
     "source-map-support": "^0.5.21"
   }
 }
