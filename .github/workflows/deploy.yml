@@ -10,6 +10,12 @@ on:
         required: true
       AWS_REGION:
         required: true
+      SPOTIFY_CLIENT_ID:
+        required: true
+      SPOTIFY_CLIENT_SECRET:
+        required: true
+      SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
+        required: true
 
 jobs:
   deploy:
