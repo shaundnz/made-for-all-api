@@ -1,17 +1,18 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+
+const envVariables = {
+    DYNAMO_ENDPOINT: process.env.DYNAMO_ENDPOINT || "",
+    DYNAMO_TABLE_NAME: process.env.DYNAMO_TABLE_NAME || "",
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID || "",
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET || "",
+    SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
+        process.env.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN || "",
+};
 
 export class MadeForAllApiStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
-
-        // The code that defines your stack goes here
-
-        // example resource
-        // const queue = new sqs.Queue(this, 'MadeForAllApiQueue', {
-        //   visibilityTimeout: cdk.Duration.seconds(300)
-        // });
 
         const sampleLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
             this,
@@ -31,6 +32,7 @@ export class MadeForAllApiStack extends cdk.Stack {
                     timeout: cdk.Duration.seconds(15),
                     memorySize: 128,
                     entry: "src/lambdas/get-tracked-playlist/index.ts",
+                    environment: envVariables,
                 }
             );
 

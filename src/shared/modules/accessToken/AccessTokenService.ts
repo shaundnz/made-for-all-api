@@ -17,7 +17,7 @@ export class AccessTokenService {
         const accessTokenResponse =
             await this.spotifyApiClient.getNewAccessToken();
 
-        this.accessTokenRepository.upsertAccessToken({
+        await this.accessTokenRepository.upsertAccessToken({
             token: accessTokenResponse.access_token,
             expiry: new Date(
                 Date.now() + accessTokenResponse.expires_in * 1000
