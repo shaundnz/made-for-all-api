@@ -13,16 +13,6 @@ export class MadeForAllApiStack extends cdk.Stack {
             billing: cdk.aws_dynamodb.Billing.onDemand(),
         });
 
-        const sampleLambda = new cdk.aws_lambda_nodejs.NodejsFunction(
-            this,
-            "sample-lambda",
-            {
-                timeout: cdk.Duration.seconds(15),
-                memorySize: 128,
-                entry: "src/lambdas/sample-lambda/index.ts",
-            }
-        );
-
         const getTrackedPlaylistLambda =
             new cdk.aws_lambda_nodejs.NodejsFunction(
                 this,
@@ -38,12 +28,6 @@ export class MadeForAllApiStack extends cdk.Stack {
         table.grantReadData(getTrackedPlaylistLambda);
 
         const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
-
-        const test = api.root.addResource("sample");
-        test.addMethod(
-            "GET",
-            new cdk.aws_apigateway.LambdaIntegration(sampleLambda)
-        );
 
         const playlists = api.root.addResource("playlists");
 
