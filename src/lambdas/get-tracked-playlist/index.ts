@@ -2,10 +2,10 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
-    AccessTokenRepository,
-    AccessTokenService,
-} from "../../shared/modules/accessToken";
-import { SpotifyApiClient } from "../../shared/api/SpotifyApiClient";
+    MadeForAllRepository,
+    MadeForAllService,
+} from "../../shared/modules/madeForAll";
+import { GetTrackedPlaylistResponse } from "../../shared/api/contracts";
 
 const client = new DynamoDBClient({
     endpoint: process.env.DYNAMO_ENDPOINT,
@@ -18,18 +18,32 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
     const playlistId = event.pathParameters?.id;
 
-    const accessTokenService = new AccessTokenService(
-        new AccessTokenRepository(dynamo),
-        new SpotifyApiClient()
+    if (!playlistId) {
+        return { statusCode: 400, body: "" };
+    }
+
+    const madeForAllService = new MadeForAllService(
+        new MadeForAllRepository(dynamo)
     );
 
-    const token = await accessTokenService.getValidAccessToken();
+    const madeForPlaylistId = await madeForAllService.getMadeForAllPlaylistId(
+        playlistId
+    );
+
+    if (!madeForPlaylistId) {
+        return {
+            statusCode: 404,
+            body: "",
+        };
+    }
+
+    const responseBody: GetTrackedPlaylistResponse = {
+        spotifyPlaylistId: playlistId,
+        madeForAllPlaylistId: madeForPlaylistId,
+    };
 
     return {
         statusCode: 200,
-        body: JSON.stringify({
-            message: `Get playlist with id ${playlistId}`,
-            token: token,
-        }),
+        body: JSON.stringify(responseBody),
     };
 };
