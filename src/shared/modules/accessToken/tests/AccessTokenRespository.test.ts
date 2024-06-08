@@ -21,6 +21,7 @@ describe("AccessTokenRepository", () => {
 
     describe("getAccessToken", () => {
         it("should get the access token", async () => {
+            // Arrange
             const accessToken: AccessToken = {
                 token: "secretToken",
                 expiry: new Date(),
@@ -35,8 +36,10 @@ describe("AccessTokenRepository", () => {
                 })
             );
 
+            // Act
             const res = await sut.getAccessToken();
 
+            // Assert
             expect(mockSendFunction).toHaveBeenCalled();
 
             const mockSendFunctionCallArgs: GetCommand =
@@ -53,14 +56,17 @@ describe("AccessTokenRepository", () => {
         });
 
         it("should return null if the access token is not found", async () => {
+            // Arrange
             mockSendFunction.mockImplementationOnce(() =>
                 Promise.resolve({
                     Item: null,
                 })
             );
 
+            // Act
             const res = await sut.getAccessToken();
 
+            // Assert
             expect(mockSendFunction).toHaveBeenCalled();
 
             const mockSendFunctionCallArgs: GetCommand =
@@ -77,6 +83,7 @@ describe("AccessTokenRepository", () => {
 
     describe("upsertAccessToken", () => {
         it("should upsert the existing access token", async () => {
+            // Arrange
             mockSendFunction.mockImplementationOnce(() => Promise.resolve());
 
             const accessToken: AccessToken = {
@@ -84,8 +91,10 @@ describe("AccessTokenRepository", () => {
                 expiry: new Date(),
             };
 
+            // Act
             await sut.upsertAccessToken(accessToken);
 
+            // Assert
             expect(mockSendFunction).toHaveBeenCalled();
 
             const mockSendFunctionCallArgs: PutCommand =
