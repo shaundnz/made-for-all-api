@@ -1,9 +1,9 @@
 import fetch from "node-fetch";
 import { HTTPResponseError } from "./HTTPResponseError";
-import { SpotifyGetAccessTokenResponse } from "./contracts";
+import { AccessToken } from "@spotify/web-api-ts-sdk";
 
 export class SpotifyApiClient {
-    public static async getNewAccessToken(): Promise<string> {
+    public async getNewAccessToken(): Promise<AccessToken> {
         const params = new URLSearchParams([
             ["grant_type", "refresh_token"],
             [
@@ -31,8 +31,8 @@ export class SpotifyApiClient {
             throw new HTTPResponseError(res);
         }
 
-        const data = (await res.json()) as SpotifyGetAccessTokenResponse;
+        const data = (await res.json()) as AccessToken;
 
-        return data.access_token;
+        return data;
     }
 }
