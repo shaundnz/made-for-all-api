@@ -1,5 +1,3 @@
 export interface AllPlaylists {
-    allPlaylists: {
-        [playlistId: string]: string;
-    };
+    [spotifyPlaylistId: string]: string;
 }
