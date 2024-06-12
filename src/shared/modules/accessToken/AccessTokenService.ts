@@ -1,16 +1,16 @@
 import { AccessTokenRepository } from "./AccessTokenRepository";
-import { SpotifyApiClient } from "../../api/SpotifyApiClient";
+import { SpotifyAccessTokenApiClient } from "../../api";
 
 export class AccessTokenService {
     private accessTokenRepository: AccessTokenRepository;
-    private spotifyApiClient: SpotifyApiClient;
+    private spotifyApiClient: SpotifyAccessTokenApiClient;
 
     constructor(
         accessTokenRepository: AccessTokenRepository,
-        spotifyApiClient: SpotifyApiClient
+        spotifyApiAccessTokenClient: SpotifyAccessTokenApiClient
     ) {
         this.accessTokenRepository = accessTokenRepository;
-        this.spotifyApiClient = spotifyApiClient;
+        this.spotifyApiClient = spotifyApiAccessTokenClient;
     }
 
     private async getNewAccessToken(): Promise<string> {
