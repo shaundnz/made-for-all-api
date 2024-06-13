@@ -1,4 +1,5 @@
 import {
+    DeleteCommand,
     DynamoDBDocumentClient,
     GetCommand,
     PutCommand,
@@ -34,11 +35,13 @@ export class MadeForAllRepository {
 
     public async upsertMadeForAllPlaylist(
         spotifyPlaylistId: string,
-        madeForAllPlaylist: MadeForAllPlaylist
+        madeForAllPlaylistId: string
     ) {
         const item: DynamoDBItem<MadeForAllPlaylist> = {
             PartitionKey: spotifyPlaylistId,
-            Data: madeForAllPlaylist,
+            Data: {
+                madeForAllPlaylistId: madeForAllPlaylistId,
+            },
         };
 
         await this.dynamo.send(
@@ -49,5 +52,16 @@ export class MadeForAllRepository {
         );
 
         return;
+    }
+
+    public async deleteMadeForAllPlaylist(spotifyPlaylistId: string) {
+        await this.dynamo.send(
+            new DeleteCommand({
+                TableName: process.env.DYNAMO_TABLE_NAME,
+                Key: {
+                    PartitionKey: spotifyPlaylistId,
+                },
+            })
+        );
     }
 }
