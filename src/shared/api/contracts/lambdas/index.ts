@@ -1,5 +1,5 @@
 export * from "./GetAllTrackedPlaylistResponseDto";
-export * from "./GetTrackedPlaylistResponse";
+export * from "./GetTrackedPlaylistResponseDto";
 export * from "./CreateTrackedPlaylistRequestDto";
 export * from "./CreateTrackedPlaylistResponseDto";
 export * from "./UpdateTrackedPlaylistRequestDto";
