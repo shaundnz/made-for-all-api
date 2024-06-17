@@ -57,7 +57,7 @@ jobs:
 
       - name: Get deployed URL
         run: |
-          export MADE_FOR_ALL_API=$(jq -r '.MadeForAllApiStack.MadeForAllApi' path/to/your/jsonfile.json)
+          export MADE_FOR_ALL_API=$(jq -r '.MadeForAllApiStack.MadeForAllApi' cdk-deploy-output.json)
           echo "MADE_FOR_ALL_API=$MADE_FOR_ALL_API" >> $GITHUB_ENV
 
       - name: Print environment variable
