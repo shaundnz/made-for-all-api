@@ -15,6 +15,7 @@ const SONG_TO_ADD_URI = "spotify:track:2otAb5kIGdZzJCqcUHNztT";
 describe("PUT /playlists", () => {
     let api: TestAgent;
     let spotifyApiUtils: SpotifyApiUtils;
+    let madeForAllSpotifyUserUtils: MadeForAllSpotifyUserUtils;
     let madeForAllApiUtils: MadeForAllApiUtils;
     let createdTestPlaylist: string;
 
@@ -22,6 +23,13 @@ describe("PUT /playlists", () => {
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         spotifyApiUtils = new SpotifyApiUtils();
+
+        const spotifyAccessTokenApiClient = new SpotifyAccessTokenApiClient();
+        const accessTokenResponse =
+            await spotifyAccessTokenApiClient.getNewAccessToken();
+        madeForAllSpotifyUserUtils = new MadeForAllSpotifyUserUtils(
+            accessTokenResponse.access_token
+        );
 
         // Note: Will need to be updated if only allow copy of spotify playlists
         const response = await madeForAllApiUtils.createPlaylist(
@@ -33,6 +41,12 @@ describe("PUT /playlists", () => {
     });
 
     afterAll(async () => {
+        // Remove added song if it failed to be removed during test
+        await madeForAllSpotifyUserUtils.removeSongFromPlaylist(
+            TEST_BASE_PLAYLIST_ID,
+            SONG_TO_ADD_URI
+        );
+
         // Delete the playlist
         const response = await madeForAllApiUtils.deletePlaylist(
             TEST_BASE_PLAYLIST_ID
@@ -41,13 +55,6 @@ describe("PUT /playlists", () => {
     });
 
     it("should update the tracked playlist", async () => {
-        const spotifyAccessTokenApiClient = new SpotifyAccessTokenApiClient();
-        const accessTokenResponse =
-            await spotifyAccessTokenApiClient.getNewAccessToken();
-        const madeForAllSpotifyUserUtils = new MadeForAllSpotifyUserUtils(
-            accessTokenResponse.access_token
-        );
-
         // Add a new song
         await madeForAllSpotifyUserUtils.addSongToPlaylist(
             TEST_BASE_PLAYLIST_ID,
