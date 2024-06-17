@@ -60,8 +60,9 @@ describe("PUT /playlists", () => {
             TEST_BASE_PLAYLIST_ID,
             SONG_TO_ADD_URI
         );
-        await madeForAllApiUtils.updatePlaylist(TEST_BASE_PLAYLIST_ID);
+        await new Promise((r) => setTimeout(r, 2000));
 
+        await madeForAllApiUtils.updatePlaylist(TEST_BASE_PLAYLIST_ID);
         await new Promise((r) => setTimeout(r, 2000));
 
         const playlistAfterUpdateOne = await spotifyApiUtils.getPlaylist(
@@ -77,10 +78,10 @@ describe("PUT /playlists", () => {
             TEST_BASE_PLAYLIST_ID,
             SONG_TO_ADD_URI
         );
-
         await new Promise((r) => setTimeout(r, 2000));
 
         await madeForAllApiUtils.updatePlaylist(TEST_BASE_PLAYLIST_ID);
+        await new Promise((r) => setTimeout(r, 2000));
 
         const playlistAfterUpdateTwo = await spotifyApiUtils.getPlaylist(
             createdTestPlaylist
