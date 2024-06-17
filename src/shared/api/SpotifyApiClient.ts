@@ -86,8 +86,6 @@ export class SpotifyApiClient {
             originalPlaylist
         );
 
-        await new Promise((r) => setTimeout(r, 500));
-
         await this.authenticatedMadeForAllClient.playlists.addCustomPlaylistCoverImageFromBase64String(
             createdPlaylist.id,
             playlistCover
