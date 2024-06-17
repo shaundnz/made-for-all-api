@@ -16,3 +16,11 @@ export const splitArrayIntoChunks = <T>(
 
     return result;
 };
+
+export const safeParseJSON = (data: any) => {
+    try {
+        return JSON.parse(data);
+    } catch (ex) {
+        return null;
+    }
+};
