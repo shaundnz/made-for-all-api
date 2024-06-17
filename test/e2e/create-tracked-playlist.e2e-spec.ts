@@ -32,6 +32,10 @@ describe("POST /playlists", () => {
         expect(response.body.spotifyPlaylistId).toBe(SPOTIFY_PLAYLIST_TO_TRACK);
         expect(response.body.madeForAllPlaylistId).toBeDefined();
 
+        // Required to get most up to date playlist items
+        // See note in update-tracked-playlist.e2e-spec.ts for more info
+        await new Promise((r) => setTimeout(r, 2000));
+
         await spotifyApiUtils.validateMadeForAllPlaylist(
             SPOTIFY_PLAYLIST_TO_TRACK,
             response.body.madeForAllPlaylistId

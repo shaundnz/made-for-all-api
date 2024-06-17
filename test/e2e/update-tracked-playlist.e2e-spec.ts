@@ -55,6 +55,8 @@ describe("PUT /playlists", () => {
     });
 
     it("should update the tracked playlist", async () => {
+        // Promises required to wait between updates that change playlist contents, as the
+        // spotify API does not always get the latests playlist items if called in quick succession
         // Add a new song
         await madeForAllSpotifyUserUtils.addSongToPlaylist(
             TEST_BASE_PLAYLIST_ID,
