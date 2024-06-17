@@ -1,6 +1,8 @@
 *.js
 !jest.config.js
+!jest-e2e.config.js
 *.d.ts
+!environment.d.ts
 node_modules
 dist
 
