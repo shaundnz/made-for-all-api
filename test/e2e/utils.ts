@@ -119,3 +119,9 @@ export class MadeForAllSpotifyUserUtils {
 }
 
 export const getApiBaseUrl = () => {};
+
+// Spotify API does not seem to handle requests sent in quick succession, regularly returns 502, API is not being
+// rate limited so unsure why :/
+export const delayTestSuiteStart = async () => {
+    await new Promise((r) => setTimeout(r, 2000));
+};

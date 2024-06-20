@@ -1,6 +1,6 @@
 import * as supertest from "supertest";
 import TestAgent = require("supertest/lib/agent");
-import { MadeForAllApiUtils } from "./utils";
+import { MadeForAllApiUtils, delayTestSuiteStart } from "./utils";
 
 // Scarlet Fire Radio
 const SPOTIFY_PLAYLIST_TO_TRACK = "37i9dQZF1E8RYDNQF3ifT2";
@@ -11,7 +11,7 @@ describe("DELETE /playlists/:id", () => {
     let createdTestPlaylist: string;
 
     beforeAll(async () => {
-        await new Promise((r) => setTimeout(r, 5000));
+        await delayTestSuiteStart();
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApi = new MadeForAllApiUtils(api);
         // Create a playlist

@@ -4,6 +4,7 @@ import {
     MadeForAllApiUtils,
     MadeForAllSpotifyUserUtils,
     SpotifyApiUtils,
+    delayTestSuiteStart,
 } from "./utils";
 import { SpotifyAccessTokenApiClient } from "../../src/shared/api";
 
@@ -20,7 +21,7 @@ describe("PUT /playlists", () => {
     let createdTestPlaylist: string;
 
     beforeAll(async () => {
-        await new Promise((r) => setTimeout(r, 5000));
+        await delayTestSuiteStart();
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         spotifyApiUtils = new SpotifyApiUtils();

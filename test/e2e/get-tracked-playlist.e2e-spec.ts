@@ -1,6 +1,6 @@
 import * as supertest from "supertest";
 import TestAgent = require("supertest/lib/agent");
-import { MadeForAllApiUtils } from "./utils";
+import { MadeForAllApiUtils, delayTestSuiteStart } from "./utils";
 
 // Givin It Up Radio
 const SPOTIFY_PLAYLIST_TO_TRACK = "37i9dQZF1E8Owfia6rNxzt";
@@ -11,7 +11,7 @@ describe("GET /playlists/:id", () => {
     let createdTestPlaylist: string;
 
     beforeAll(async () => {
-        await new Promise((r) => setTimeout(r, 5000));
+        await delayTestSuiteStart();
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         // Create a playlist
