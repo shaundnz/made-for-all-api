@@ -11,7 +11,7 @@ describe("GET /playlists", () => {
     let createdTestPlaylist: string;
 
     beforeAll(async () => {
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 5000));
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         // Create a playlist
