@@ -1,4 +1,4 @@
-import { SpotifyApiClient } from "../../../api/SpotifyApiClient";
+import { SpotifyAccessTokenApiClient } from "../../../api";
 import { AccessToken } from "../../../entities";
 import { AccessTokenRepository } from "../AccessTokenRepository";
 import { AccessTokenService } from "../AccessTokenService";
@@ -7,7 +7,7 @@ describe("AccessTokenService", () => {
     const now = new Date(2024, 5, 7, 10);
     let sut: AccessTokenService;
     let mockAccessTokenRepository: AccessTokenRepository;
-    let mockSpotifyApiClient: SpotifyApiClient;
+    let mockSpotifyAccessTokenApiClient: SpotifyAccessTokenApiClient;
 
     beforeEach(() => {
         jest.useFakeTimers().setSystemTime(now);
@@ -16,13 +16,13 @@ describe("AccessTokenService", () => {
             upsertAccessToken: jest.fn(),
         } as unknown as AccessTokenRepository;
 
-        mockSpotifyApiClient = {
+        mockSpotifyAccessTokenApiClient = {
             getNewAccessToken: jest.fn(),
-        } as SpotifyApiClient;
+        } as SpotifyAccessTokenApiClient;
 
         sut = new AccessTokenService(
             mockAccessTokenRepository,
-            mockSpotifyApiClient
+            mockSpotifyAccessTokenApiClient
         );
     });
 
@@ -81,7 +81,7 @@ describe("AccessTokenService", () => {
                 };
 
                 const spotifyClientGetNewAccessTokenSpy = jest
-                    .spyOn(mockSpotifyApiClient, "getNewAccessToken")
+                    .spyOn(mockSpotifyAccessTokenApiClient, "getNewAccessToken")
                     .mockImplementationOnce(() =>
                         Promise.resolve(spotifyApiAccessTokenResponse)
                     );

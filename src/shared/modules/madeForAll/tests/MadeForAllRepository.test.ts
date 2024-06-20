@@ -1,4 +1,5 @@
 import {
+    DeleteCommand,
     DynamoDBDocumentClient,
     GetCommand,
     PutCommand,
@@ -88,17 +89,14 @@ describe("MadeForAllRepository", () => {
             // Arrange
             const spotifyPlaylistId = "spotify-playlist-id";
 
-            const madeForAllPlaylist: MadeForAllPlaylist = {
-                madeForAllPlaylistId: "made-for-all-playlist-id",
-            };
+            const madeForAllPlaylistId = "made-for-all-playlist-id";
 
             const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
-            sendSpy.mockImplementationOnce(() => Promise.resolve());
 
             // Act
             await sut.upsertMadeForAllPlaylist(
                 spotifyPlaylistId,
-                madeForAllPlaylist
+                madeForAllPlaylistId
             );
 
             // Assert
@@ -111,7 +109,30 @@ describe("MadeForAllRepository", () => {
 
             expect(mockSendFunctionCallArgs.input.Item).toEqual({
                 PartitionKey: spotifyPlaylistId,
-                Data: madeForAllPlaylist,
+                Data: {
+                    madeForAllPlaylistId: madeForAllPlaylistId,
+                },
+            });
+        });
+    });
+
+    describe("deleteMadeForAllPlaylist", () => {
+        it("should delete the madeForAll playlist", async () => {
+            // Arrange
+            const spotifyPlaylistId = "spotify-playlist-id";
+            const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
+
+            // Act
+            await sut.deleteMadeForAllPlaylist(spotifyPlaylistId);
+
+            // Assert
+            expect(sendSpy).toHaveBeenCalled();
+
+            const mockSendFunctionCallArgs = sendSpy.mock
+                .calls[0][0] as DeleteCommand;
+            expect(mockSendFunctionCallArgs).toBeInstanceOf(DeleteCommand);
+            expect(mockSendFunctionCallArgs.input.Key).toEqual({
+                PartitionKey: spotifyPlaylistId,
             });
         });
     });

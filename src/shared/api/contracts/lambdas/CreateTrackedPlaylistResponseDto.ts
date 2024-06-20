@@ -1,4 +1,4 @@
-export interface GetTrackedPlaylistResponse {
+export interface CreateTrackedPlaylistResponseDto {
     spotifyPlaylistId: string;
     madeForAllPlaylistId: string;
 }

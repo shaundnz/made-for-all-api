@@ -1,5 +1,3 @@
-import { Response } from "node-fetch";
-
 export class HTTPResponseError extends Error {
     public response: Response;
 

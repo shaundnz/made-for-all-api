@@ -6,7 +6,6 @@ import {
     MadeForAllRepository,
     MadeForAllService,
 } from "../../shared/modules/madeForAll";
-import { GetTrackedPlaylistResponseDto } from "../../shared/api/contracts";
 import {
     AccessTokenRepository,
     AccessTokenService,
@@ -25,9 +24,9 @@ const dynamo = DynamoDBDocumentClient.from(client);
 export const handler = async (
     event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-    const playlistId = event.pathParameters?.id;
+    const spotifyPlaylistId = event.pathParameters?.id;
 
-    if (!playlistId) {
+    if (!spotifyPlaylistId) {
         return { statusCode: 400, body: "" };
     }
 
@@ -44,24 +43,24 @@ export const handler = async (
         new SpotifyApiClient(accessToken)
     );
 
-    const madeForPlaylistId = await madeForAllService.getMadeForAllPlaylistId(
-        playlistId
+    const playlistToDelete = await madeForAllService.getMadeForAllPlaylistId(
+        spotifyPlaylistId
     );
 
-    if (!madeForPlaylistId) {
+    if (playlistToDelete === null) {
         return {
             statusCode: 404,
             body: "",
         };
     }
 
-    const responseBody: GetTrackedPlaylistResponseDto = {
-        spotifyPlaylistId: playlistId,
-        madeForAllPlaylistId: madeForPlaylistId,
-    };
+    await madeForAllService.deleteMadeForAllPlaylist(
+        spotifyPlaylistId,
+        playlistToDelete
+    );
 
     return {
         statusCode: 200,
-        body: JSON.stringify(responseBody),
+        body: JSON.stringify({ message: "Playlist Deleted" }),
     };
 };
