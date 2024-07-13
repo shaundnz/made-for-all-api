@@ -19,7 +19,7 @@ describe("DELETE /playlists/:id", () => {
             SPOTIFY_PLAYLIST_TO_TRACK
         );
         expect(response.status).toBe(201);
-        createdTestPlaylist = response.body.madeForAllPlaylist;
+        createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();
     });
 

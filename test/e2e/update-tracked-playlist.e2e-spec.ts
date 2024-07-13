@@ -38,7 +38,7 @@ describe("PUT /playlists", () => {
             TEST_BASE_PLAYLIST_ID
         );
         expect(response.status).toBe(201);
-        createdTestPlaylist = response.body.madeForAllPlaylist;
+        createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();
     });
 
