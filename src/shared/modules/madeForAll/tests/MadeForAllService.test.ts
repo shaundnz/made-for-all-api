@@ -153,9 +153,8 @@ describe("MadeForAllService", () => {
             );
 
             // Act
-            const newPlaylist = await sut.createMadeForAllPlaylist(
-                spotifyPlaylistId
-            );
+            const createMadeForAllPlaylistResponse =
+                await sut.createMadeForAllPlaylist(spotifyPlaylistId);
 
             // Assert
             expect(getPlaylistWithAllTracksSpy).toHaveBeenCalledWith(
@@ -175,7 +174,11 @@ describe("MadeForAllService", () => {
             expect(
                 addPlaylistToDenormalizedAllPlaylistsItemSpy
             ).toHaveBeenCalledWith(spotifyPlaylistId, newMadeForAllPlaylist.id);
-            expect(newPlaylist).toBe(newMadeForAllPlaylist);
+
+            expect(createMadeForAllPlaylistResponse).toStrictEqual({
+                spotifyPlaylist: existingSpotifyPlaylist,
+                madeForAllPlaylist: newMadeForAllPlaylist,
+            });
         });
     });
 
