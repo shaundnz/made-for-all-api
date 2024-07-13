@@ -19,7 +19,7 @@ describe("GET /playlists/:id", () => {
             SPOTIFY_PLAYLIST_TO_TRACK
         );
         expect(response.status).toBe(201);
-        createdTestPlaylist = response.body.madeForAllPlaylistId;
+        createdTestPlaylist = response.body.madeForAllPlaylist;
         expect(createdTestPlaylist).toBeDefined();
     });
 
