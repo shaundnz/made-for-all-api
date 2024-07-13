@@ -4,7 +4,7 @@ import {
     GetCommand,
     PutCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBItem, MadeForAllPlaylist } from "../../entities";
+import { DynamoDBItem, PlaylistData, TrackedPlaylist } from "../../entities";
 
 export class MadeForAllRepository {
     private dynamo: DynamoDBDocumentClient;
@@ -28,19 +28,20 @@ export class MadeForAllRepository {
         }
 
         const item =
-            getMadeForAllPlaylistOutput.Item as DynamoDBItem<MadeForAllPlaylist>;
+            getMadeForAllPlaylistOutput.Item as DynamoDBItem<TrackedPlaylist>;
 
-        return item.Data.madeForAllPlaylistId;
+        return item.Data.madeForAllPlaylist.id;
     }
 
     public async upsertMadeForAllPlaylist(
-        spotifyPlaylistId: string,
-        madeForAllPlaylistId: string
+        spotifyPlaylist: PlaylistData,
+        madeForAllPlaylist: PlaylistData
     ) {
-        const item: DynamoDBItem<MadeForAllPlaylist> = {
-            PartitionKey: spotifyPlaylistId,
+        const item: DynamoDBItem<TrackedPlaylist> = {
+            PartitionKey: spotifyPlaylist.id,
             Data: {
-                madeForAllPlaylistId: madeForAllPlaylistId,
+                spotifyPlaylist: spotifyPlaylist,
+                madeForAllPlaylist: madeForAllPlaylist,
             },
         };
 

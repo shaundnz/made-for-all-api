@@ -169,8 +169,8 @@ describe("MadeForAllService", () => {
                 newMadeForAllPlaylist
             );
             expect(upsertMadeForAllPlaylistSpy).toHaveBeenCalledWith(
-                spotifyPlaylistId,
-                newMadeForAllPlaylist.id
+                existingSpotifyPlaylist,
+                newMadeForAllPlaylist
             );
             expect(
                 addPlaylistToDenormalizedAllPlaylistsItemSpy

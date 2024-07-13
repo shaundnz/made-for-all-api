@@ -61,9 +61,16 @@ export class MadeForAllService {
             newPlaylist
         );
 
+        const {
+            tracks: originalPlaylistTracks,
+            ...originalPlaylistWithoutTracks
+        } = originalPlaylist;
+        const { tracks: newPlaylistTracks, ...newPlaylistWithoutTracks } =
+            newPlaylist;
+
         await this.madeForAllRepository.upsertMadeForAllPlaylist(
-            spotifyPlaylistId,
-            newPlaylist.id
+            originalPlaylistWithoutTracks,
+            newPlaylistWithoutTracks
         );
 
         await this.allPlaylistsRepository.addPlaylistToDenormalizedAllPlaylistsItem(

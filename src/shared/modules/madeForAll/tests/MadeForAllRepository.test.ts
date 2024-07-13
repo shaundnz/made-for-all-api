@@ -5,7 +5,7 @@ import {
     PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { MadeForAllRepository } from "../MadeForAllRepository";
-import { MadeForAllPlaylist } from "../../../entities";
+import { PlaylistData, TrackedPlaylist } from "../../../entities";
 
 describe("MadeForAllRepository", () => {
     let sut: MadeForAllRepository;
@@ -28,16 +28,21 @@ describe("MadeForAllRepository", () => {
             // Arrange
             const spotifyPlaylistId = "spotify-playlist-id";
 
-            const madeForAllPlaylist: MadeForAllPlaylist = {
-                madeForAllPlaylistId: "made-for-all-playlist-id",
-            };
+            const trackedPlaylist = {
+                madeForAllPlaylist: {
+                    id: "made-for-all-playlist-id",
+                },
+                spotifyPlaylist: {
+                    id: spotifyPlaylistId,
+                },
+            } as TrackedPlaylist;
 
             const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
             sendSpy.mockImplementationOnce(() =>
                 Promise.resolve({
                     Item: {
                         PartitionKey: spotifyPlaylistId,
-                        Data: madeForAllPlaylist,
+                        Data: trackedPlaylist,
                     },
                 })
             );
@@ -55,7 +60,7 @@ describe("MadeForAllRepository", () => {
                 PartitionKey: spotifyPlaylistId,
             });
 
-            expect(res).toBe(madeForAllPlaylist.madeForAllPlaylistId);
+            expect(res).toBe(trackedPlaylist.madeForAllPlaylist.id);
         });
 
         it("should return null if the playlist does not exist", async () => {
@@ -87,16 +92,20 @@ describe("MadeForAllRepository", () => {
     describe("upsertMadeForAllPlaylist", () => {
         it("should upsert the existing madeForAll playlist", async () => {
             // Arrange
-            const spotifyPlaylistId = "spotify-playlist-id";
+            const spotifyPlaylist = {
+                id: "spotify-playlist-id",
+            } as PlaylistData;
 
-            const madeForAllPlaylistId = "made-for-all-playlist-id";
+            const madeForAllPlaylist = {
+                id: "made-for-all-playlist-id",
+            } as PlaylistData;
 
             const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
 
             // Act
             await sut.upsertMadeForAllPlaylist(
-                spotifyPlaylistId,
-                madeForAllPlaylistId
+                spotifyPlaylist,
+                madeForAllPlaylist
             );
 
             // Assert
@@ -108,9 +117,10 @@ describe("MadeForAllRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(PutCommand);
 
             expect(mockSendFunctionCallArgs.input.Item).toEqual({
-                PartitionKey: spotifyPlaylistId,
+                PartitionKey: spotifyPlaylist.id,
                 Data: {
-                    madeForAllPlaylistId: madeForAllPlaylistId,
+                    spotifyPlaylist: spotifyPlaylist,
+                    madeForAllPlaylist: madeForAllPlaylist,
                 },
             });
         });
