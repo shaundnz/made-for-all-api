@@ -15,9 +15,9 @@ describe("GET /playlists/:id", () => {
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         // Create a playlist
-        const response = await madeForAllApiUtils.createPlaylist(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
+        const response = await madeForAllApiUtils.createPlaylist({
+            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
+        });
         expect(response.status).toBe(201);
         createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();
@@ -32,19 +32,17 @@ describe("GET /playlists/:id", () => {
     });
 
     it("should return a tracked playlist", async () => {
-        const response = await madeForAllApiUtils.getPlaylist(
+        const { status, body } = await madeForAllApiUtils.getPlaylist(
             SPOTIFY_PLAYLIST_TO_TRACK
         );
-        expect(response.status).toBe(200);
-        expect(response.body.spotifyPlaylist).toBeDefined();
-        expect(response.body.spotifyPlaylist.id).toBe(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
-        expect(response.body.spotifyPlaylist.name).toBe("Givin It Up Radio");
+        expect(status).toBe(200);
+        expect(body.spotifyPlaylist).toBeDefined();
+        expect(body.spotifyPlaylist.id).toBe(SPOTIFY_PLAYLIST_TO_TRACK);
+        expect(body.spotifyPlaylist.name).toBe("Givin It Up Radio");
 
-        expect(response.body.madeForAllPlaylist).toBeDefined();
-        expect(response.body.madeForAllPlaylist.id).toBeDefined();
-        expect(response.body.madeForAllPlaylist.name).toBe(
+        expect(body.madeForAllPlaylist).toBeDefined();
+        expect(body.madeForAllPlaylist.id).toBeDefined();
+        expect(body.madeForAllPlaylist.name).toBe(
             "MadeForAll - Givin It Up Radio"
         );
     });

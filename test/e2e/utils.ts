@@ -2,6 +2,17 @@ import "dotenv/config";
 import TestAgent = require("supertest/lib/agent");
 import Response = require("superagent/lib/node/response");
 import { Playlist, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
+import {
+    CreateTrackedPlaylistRequestDto,
+    CreateTrackedPlaylistResponseDto,
+    DeleteTrackedPlaylistsResponseDto,
+    GetAllTrackedPlaylistResponseDto,
+    GetTrackedPlaylistResponseDto,
+    UpdateTrackedPlaylistRequestDto,
+    UpdateTrackedPlaylistResponseDto,
+} from "../../src/shared/api/contracts";
+
+type SuperTestResponse<T> = Omit<Response, "body"> & { body: T };
 
 export class MadeForAllApiUtils {
     private api: TestAgent;
@@ -10,31 +21,37 @@ export class MadeForAllApiUtils {
         this.api = api;
     }
 
-    public async getPlaylist(spotifyPlaylistId: string): Promise<Response> {
+    public async getPlaylist(
+        spotifyPlaylistId: string
+    ): Promise<SuperTestResponse<GetTrackedPlaylistResponseDto>> {
         const response = await this.api.get(`/playlists/${spotifyPlaylistId}`);
         return response;
     }
 
-    public async getAllPlaylists() {
+    public async getAllPlaylists(): Promise<
+        SuperTestResponse<GetAllTrackedPlaylistResponseDto>
+    > {
         const response = await this.api.get(`/playlists`);
         return response;
     }
 
-    public async createPlaylist(spotifyPlaylistId: string): Promise<Response> {
-        const response = await this.api
-            .post("/playlists")
-            .send({ spotifyPlaylistId: spotifyPlaylistId });
+    public async createPlaylist(
+        data: CreateTrackedPlaylistRequestDto
+    ): Promise<SuperTestResponse<CreateTrackedPlaylistResponseDto>> {
+        const response = await this.api.post("/playlists").send(data);
         return response;
     }
 
-    public async updatePlaylist(spotifyPlaylistId: string): Promise<Response> {
-        const response = await this.api
-            .put("/playlists")
-            .send({ spotifyPlaylistId: spotifyPlaylistId });
+    public async updatePlaylist(
+        data: UpdateTrackedPlaylistRequestDto
+    ): Promise<SuperTestResponse<UpdateTrackedPlaylistResponseDto>> {
+        const response = await this.api.put("/playlists").send(data);
         return response;
     }
 
-    public async deletePlaylist(spotifyPlaylistId: string): Promise<Response> {
+    public async deletePlaylist(
+        spotifyPlaylistId: string
+    ): Promise<SuperTestResponse<DeleteTrackedPlaylistsResponseDto>> {
         const response = await this.api.delete(
             `/playlists/${spotifyPlaylistId}`
         );

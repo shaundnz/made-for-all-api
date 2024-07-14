@@ -2,7 +2,6 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
-    AllPlaylistsRepository,
     MadeForAllRepository,
     MadeForAllService,
 } from "../../shared/modules/madeForAll";
@@ -40,7 +39,6 @@ export const handler = async (
 
     const madeForAllService = new MadeForAllService(
         new MadeForAllRepository(dynamo),
-        new AllPlaylistsRepository(dynamo),
         new SpotifyApiClient(accessToken)
     );
 

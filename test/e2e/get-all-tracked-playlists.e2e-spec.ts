@@ -15,9 +15,9 @@ describe("GET /playlists", () => {
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         // Create a playlist
-        const response = await madeForAllApiUtils.createPlaylist(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
+        const response = await madeForAllApiUtils.createPlaylist({
+            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
+        });
         expect(response.status).toBe(201);
         createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();
@@ -35,10 +35,22 @@ describe("GET /playlists", () => {
         const response = await madeForAllApiUtils.getAllPlaylists();
         expect(response.status).toBe(200);
         expect(response.body).toBeInstanceOf(Array);
+
         expect(response.body.length).toBeGreaterThanOrEqual(1);
-        expect(response.body).toContainEqual({
-            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
-            madeForAllPlaylistId: expect.any(String),
-        });
+
+        const addedPlaylist = response.body.find(
+            (trackedPlaylist) =>
+                trackedPlaylist.spotifyPlaylist.id === SPOTIFY_PLAYLIST_TO_TRACK
+        );
+
+        expect(addedPlaylist).toBeDefined();
+
+        expect(addedPlaylist?.spotifyPlaylist.id).toBe(
+            SPOTIFY_PLAYLIST_TO_TRACK
+        );
+        expect(addedPlaylist?.spotifyPlaylist.name).toBe("Otis McMusic Radio");
+        expect(addedPlaylist?.madeForAllPlaylist.name).toBe(
+            "MadeForAll - Otis McMusic Radio"
+        );
     });
 });

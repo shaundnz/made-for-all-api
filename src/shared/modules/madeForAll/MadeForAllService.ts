@@ -4,21 +4,17 @@ import {
     CreateTrackedPlaylistResponseDto,
     GetAllTrackedPlaylistResponseDto,
 } from "../../api/contracts";
-import { AllPlaylistsRepository } from "./AllPlaylistsRepository";
 import { TrackedPlaylist } from "../../entities";
 
 export class MadeForAllService {
     private madeForAllRepository: MadeForAllRepository;
     private spotifyApiClient: SpotifyApiClient;
-    private allPlaylistsRepository: AllPlaylistsRepository;
 
     constructor(
         madeForAllRepository: MadeForAllRepository,
-        allPlaylistsRepository: AllPlaylistsRepository,
         spotifyApiClient: SpotifyApiClient
     ) {
         this.madeForAllRepository = madeForAllRepository;
-        this.allPlaylistsRepository = allPlaylistsRepository;
         this.spotifyApiClient = spotifyApiClient;
     }
 
@@ -37,20 +33,11 @@ export class MadeForAllService {
         return trackedPlaylist;
     }
 
-    public async getAllPlaylists(): Promise<
-        GetAllTrackedPlaylistResponseDto[]
-    > {
+    public async getAllTrackedPlaylists(): Promise<GetAllTrackedPlaylistResponseDto> {
         const allPlaylists =
-            await this.allPlaylistsRepository.getAllPlaylists();
+            await this.madeForAllRepository.getAllTrackedPlaylists();
 
-        if (allPlaylists === null) {
-            return [];
-        }
-
-        return Object.keys(allPlaylists).map((spotifyPlaylistId) => ({
-            spotifyPlaylistId: spotifyPlaylistId,
-            madeForAllPlaylistId: allPlaylists[spotifyPlaylistId],
-        }));
+        return allPlaylists;
     }
 
     public async createMadeForAllPlaylist(
@@ -83,10 +70,10 @@ export class MadeForAllService {
             newPlaylistWithoutTracks
         );
 
-        await this.allPlaylistsRepository.addPlaylistToDenormalizedAllPlaylistsItem(
-            spotifyPlaylistId,
-            newPlaylist.id
-        );
+        // await this.allPlaylistsRepository.addPlaylistToDenormalizedAllPlaylistsItem(
+        //     spotifyPlaylistId,
+        //     newPlaylist.id
+        // );
 
         return {
             spotifyPlaylist: originalPlaylistWithoutTracks,
@@ -128,9 +115,9 @@ export class MadeForAllService {
             spotifyPlaylistId
         );
 
-        await this.allPlaylistsRepository.removePlaylistFromDenormalizedAllPlaylistsItem(
-            spotifyPlaylistId
-        );
+        // await this.allPlaylistsRepository.removePlaylistFromDenormalizedAllPlaylistsItem(
+        //     spotifyPlaylistId
+        // );
 
         return;
     }

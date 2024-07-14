@@ -30,7 +30,8 @@ describe("AccessTokenRepository", () => {
             mockSendFunction.mockImplementationOnce(() =>
                 Promise.resolve({
                     Item: {
-                        PartitionKey: "AccessKey",
+                        PartitionKey: "AccessToken",
+                        SortKey: "AccessToken",
                         Data: accessToken,
                     },
                 })
@@ -48,6 +49,7 @@ describe("AccessTokenRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(GetCommand);
             expect(mockSendFunctionCallArgs.input.Key).toEqual({
                 PartitionKey: "AccessToken",
+                SortKey: "AccessToken",
             });
 
             expect(res).not.toBeNull();
@@ -75,6 +77,7 @@ describe("AccessTokenRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(GetCommand);
             expect(mockSendFunctionCallArgs.input.Key).toEqual({
                 PartitionKey: "AccessToken",
+                SortKey: "AccessToken",
             });
 
             expect(res).toBeNull();
@@ -103,6 +106,7 @@ describe("AccessTokenRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(PutCommand);
             expect(mockSendFunctionCallArgs.input.Item).toEqual({
                 PartitionKey: "AccessToken",
+                SortKey: "AccessToken",
                 Data: {
                     token: accessToken.token,
                     expiry: accessToken.expiry.toISOString(),

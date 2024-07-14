@@ -30,17 +30,15 @@ describe("POST /playlists", () => {
     });
 
     it("should create the tracked playlist", async () => {
-        const response = await madeForAllApiUtils.createPlaylist(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
-        expect(response.status).toBe(201);
-        expect(response.body.spotifyPlaylist).toBeDefined();
-        expect(response.body.spotifyPlaylist.id).toBe(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
-        expect(response.body.spotifyPlaylist.name).toBe("Ice & Fire Radio");
-        expect(response.body.madeForAllPlaylist.id).toBeDefined();
-        expect(response.body.madeForAllPlaylist.name).toBe(
+        const { status, body } = await madeForAllApiUtils.createPlaylist({
+            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
+        });
+        expect(status).toBe(201);
+        expect(body.spotifyPlaylist).toBeDefined();
+        expect(body.spotifyPlaylist.id).toBe(SPOTIFY_PLAYLIST_TO_TRACK);
+        expect(body.spotifyPlaylist.name).toBe("Ice & Fire Radio");
+        expect(body.madeForAllPlaylist.id).toBeDefined();
+        expect(body.madeForAllPlaylist.name).toBe(
             "MadeForAll - Ice & Fire Radio"
         );
 
@@ -50,7 +48,7 @@ describe("POST /playlists", () => {
 
         await spotifyApiUtils.validateMadeForAllPlaylist(
             SPOTIFY_PLAYLIST_TO_TRACK,
-            response.body.madeForAllPlaylist.id
+            body.madeForAllPlaylist.id
         );
     });
 
@@ -59,9 +57,9 @@ describe("POST /playlists", () => {
     );
 
     it("should return a 409 response if the playlist is already tracked", async () => {
-        const response = await madeForAllApiUtils.createPlaylist(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
+        const response = await madeForAllApiUtils.createPlaylist({
+            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
+        });
         expect(response.status).toBe(409);
     });
 

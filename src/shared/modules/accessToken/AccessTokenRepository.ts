@@ -18,7 +18,7 @@ export class AccessTokenRepository {
         const getAccessTokenOutput = await this.dynamo.send(
             new GetCommand({
                 TableName: process.env.DYNAMO_TABLE_NAME,
-                Key: { PartitionKey: "AccessToken" },
+                Key: { PartitionKey: "AccessToken", SortKey: "AccessToken" },
             })
         );
 
@@ -35,6 +35,7 @@ export class AccessTokenRepository {
     public async upsertAccessToken(accessToken: AccessToken) {
         const item: DynamoDBItem<DynamoAccessToken> = {
             PartitionKey: "AccessToken",
+            SortKey: "AccessToken",
             Data: AccessTokenMapper.entityToDynamoObject(accessToken),
         };
 

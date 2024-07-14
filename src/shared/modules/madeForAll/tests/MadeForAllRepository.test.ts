@@ -3,6 +3,7 @@ import {
     DynamoDBDocumentClient,
     GetCommand,
     PutCommand,
+    QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { MadeForAllRepository } from "../MadeForAllRepository";
 import { PlaylistData, TrackedPlaylist } from "../../../entities";
@@ -23,6 +24,84 @@ describe("MadeForAllRepository", () => {
         jest.resetAllMocks();
     });
 
+    describe("getAllTrackedPlaylists", () => {
+        it("should get all tracked playlists", async () => {
+            // Arrange
+            const spotifyPlaylistId = "spotify-playlist-id";
+
+            const trackedPlaylist = {
+                madeForAllPlaylist: {
+                    id: "made-for-all-playlist-id",
+                },
+                spotifyPlaylist: {
+                    id: spotifyPlaylistId,
+                },
+            } as TrackedPlaylist;
+
+            const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
+            sendSpy.mockImplementationOnce(() =>
+                Promise.resolve({
+                    Items: [
+                        {
+                            PartitionKey: "TrackedPlaylist",
+                            SortKey: spotifyPlaylistId,
+                            Data: trackedPlaylist,
+                        },
+                    ],
+                })
+            );
+
+            // Act
+            const res = await sut.getAllTrackedPlaylists();
+
+            // Assert
+            expect(sendSpy).toHaveBeenCalled();
+
+            const sendCommandArg = sendSpy.mock.calls[0][0] as QueryCommand;
+            expect(sendCommandArg.input.KeyConditionExpression).toBe(
+                "#PartitionKey = :trackedPlaylistPartitionKey"
+            );
+            expect(sendCommandArg.input.ExpressionAttributeNames).toEqual({
+                "#PartitionKey": "PartitionKey",
+            });
+            expect(sendCommandArg.input.ExpressionAttributeValues).toEqual({
+                ":trackedPlaylistPartitionKey": `TrackedPlaylist`,
+            });
+
+            expect(res.length).toBe(1);
+            expect(res[0]).toBe(trackedPlaylist);
+        });
+
+        it("should return a empty list if no tracked playlists exist", async () => {
+            // Arrange
+            const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
+            sendSpy.mockImplementationOnce(() =>
+                Promise.resolve({
+                    Item: null,
+                })
+            );
+
+            // Act
+            const res = await sut.getAllTrackedPlaylists();
+
+            // Assert
+            expect(sendSpy).toHaveBeenCalled();
+
+            const sendCommandArg = sendSpy.mock.calls[0][0] as QueryCommand;
+            expect(sendCommandArg.input.KeyConditionExpression).toBe(
+                "#PartitionKey = :trackedPlaylistPartitionKey"
+            );
+            expect(sendCommandArg.input.ExpressionAttributeNames).toEqual({
+                "#PartitionKey": "PartitionKey",
+            });
+            expect(sendCommandArg.input.ExpressionAttributeValues).toEqual({
+                ":trackedPlaylistPartitionKey": `TrackedPlaylist`,
+            });
+
+            expect(res.length).toBe(0);
+        });
+    });
+
     describe("getTrackedPlaylist", () => {
         it("should return the tracked playlist if the playlist exists", async () => {
             // Arrange
@@ -41,7 +120,8 @@ describe("MadeForAllRepository", () => {
             sendSpy.mockImplementationOnce(() =>
                 Promise.resolve({
                     Item: {
-                        PartitionKey: spotifyPlaylistId,
+                        PartitionKey: "TrackedPlaylist",
+                        SortKey: spotifyPlaylistId,
                         Data: trackedPlaylist,
                     },
                 })
@@ -57,7 +137,8 @@ describe("MadeForAllRepository", () => {
 
             expect(sendCommandArg).toBeInstanceOf(GetCommand);
             expect(sendCommandArg.input.Key).toEqual({
-                PartitionKey: spotifyPlaylistId,
+                PartitionKey: "TrackedPlaylist",
+                SortKey: spotifyPlaylistId,
             });
 
             expect(res).toBe(trackedPlaylist);
@@ -83,7 +164,8 @@ describe("MadeForAllRepository", () => {
 
             expect(sendCommandArg).toBeInstanceOf(GetCommand);
             expect(sendCommandArg.input.Key).toEqual({
-                PartitionKey: spotifyPlaylistId,
+                PartitionKey: "TrackedPlaylist",
+                SortKey: spotifyPlaylistId,
             });
             expect(res).toBeNull();
         });
@@ -117,7 +199,8 @@ describe("MadeForAllRepository", () => {
             expect(mockSendFunctionCallArgs).toBeInstanceOf(PutCommand);
 
             expect(mockSendFunctionCallArgs.input.Item).toEqual({
-                PartitionKey: spotifyPlaylist.id,
+                PartitionKey: "TrackedPlaylist",
+                SortKey: spotifyPlaylist.id,
                 Data: {
                     spotifyPlaylist: spotifyPlaylist,
                     madeForAllPlaylist: madeForAllPlaylist,
@@ -142,7 +225,8 @@ describe("MadeForAllRepository", () => {
                 .calls[0][0] as DeleteCommand;
             expect(mockSendFunctionCallArgs).toBeInstanceOf(DeleteCommand);
             expect(mockSendFunctionCallArgs.input.Key).toEqual({
-                PartitionKey: spotifyPlaylistId,
+                PartitionKey: "TrackedPlaylist",
+                SortKey: spotifyPlaylistId,
             });
         });
     });
