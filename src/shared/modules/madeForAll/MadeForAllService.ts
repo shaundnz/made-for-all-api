@@ -70,7 +70,7 @@ export class MadeForAllService {
         const { tracks: newPlaylistTracks, ...newPlaylistWithoutTracks } =
             newPlaylist;
 
-        await this.madeForAllRepository.upsertMadeForAllPlaylist(
+        await this.madeForAllRepository.upsertTrackedPlaylist(
             originalPlaylistWithoutTracks,
             newPlaylistWithoutTracks
         );

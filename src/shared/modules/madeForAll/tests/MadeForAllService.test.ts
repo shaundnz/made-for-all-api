@@ -13,7 +13,7 @@ describe("MadeForAllService", () => {
     beforeEach(() => {
         mockMadeForAllRepository = {
             getMadeForAllPlaylistId: jest.fn(),
-            upsertMadeForAllPlaylist: jest.fn(),
+            upsertTrackedPlaylist: jest.fn(),
             deleteMadeForAllPlaylist: jest.fn(),
         } as unknown as MadeForAllRepository;
 
@@ -142,9 +142,9 @@ describe("MadeForAllService", () => {
                 mockSpotifyApiClient,
                 "updateMadeForAllPlaylistTracks"
             );
-            const upsertMadeForAllPlaylistSpy = jest.spyOn(
+            const upsertTrackedPlaylistSpy = jest.spyOn(
                 mockMadeForAllRepository,
-                "upsertMadeForAllPlaylist"
+                "upsertTrackedPlaylist"
             );
 
             const addPlaylistToDenormalizedAllPlaylistsItemSpy = jest.spyOn(
@@ -167,7 +167,7 @@ describe("MadeForAllService", () => {
                 existingSpotifyPlaylist,
                 newMadeForAllPlaylist
             );
-            expect(upsertMadeForAllPlaylistSpy).toHaveBeenCalledWith(
+            expect(upsertTrackedPlaylistSpy).toHaveBeenCalledWith(
                 existingSpotifyPlaylist,
                 newMadeForAllPlaylist
             );
