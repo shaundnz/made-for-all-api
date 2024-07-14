@@ -13,9 +13,9 @@ export class MadeForAllRepository {
         this.dynamo = dynamo;
     }
 
-    public async getMadeForAllPlaylistId(
+    public async getTrackedPlaylist(
         spotifyPlaylistId: string
-    ): Promise<string | null> {
+    ): Promise<TrackedPlaylist | null> {
         const getMadeForAllPlaylistOutput = await this.dynamo.send(
             new GetCommand({
                 TableName: process.env.DYNAMO_TABLE_NAME,
@@ -30,7 +30,7 @@ export class MadeForAllRepository {
         const item =
             getMadeForAllPlaylistOutput.Item as DynamoDBItem<TrackedPlaylist>;
 
-        return item.Data.madeForAllPlaylist.id;
+        return item.Data;
     }
 
     public async upsertTrackedPlaylist(

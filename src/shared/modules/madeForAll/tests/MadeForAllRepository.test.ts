@@ -23,8 +23,8 @@ describe("MadeForAllRepository", () => {
         jest.resetAllMocks();
     });
 
-    describe("getMadeForAllPlaylistId", () => {
-        it("should return the madeForAll playlist id if the playlist exists", async () => {
+    describe("getTrackedPlaylist", () => {
+        it("should return the tracked playlist if the playlist exists", async () => {
             // Arrange
             const spotifyPlaylistId = "spotify-playlist-id";
 
@@ -48,7 +48,7 @@ describe("MadeForAllRepository", () => {
             );
 
             // Act
-            const res = await sut.getMadeForAllPlaylistId(spotifyPlaylistId);
+            const res = await sut.getTrackedPlaylist(spotifyPlaylistId);
 
             // Assert
             expect(sendSpy).toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe("MadeForAllRepository", () => {
                 PartitionKey: spotifyPlaylistId,
             });
 
-            expect(res).toBe(trackedPlaylist.madeForAllPlaylist.id);
+            expect(res).toBe(trackedPlaylist);
         });
 
         it("should return null if the playlist does not exist", async () => {
@@ -74,7 +74,7 @@ describe("MadeForAllRepository", () => {
             );
 
             // Act
-            const res = await sut.getMadeForAllPlaylistId(spotifyPlaylistId);
+            const res = await sut.getTrackedPlaylist(spotifyPlaylistId);
 
             // Assert
             expect(sendSpy).toHaveBeenCalled();
