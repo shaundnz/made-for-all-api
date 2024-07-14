@@ -3,6 +3,7 @@ import { SpotifyApiClient } from "../../../api";
 import { AllPlaylistsRepository } from "../AllPlaylistsRepository";
 import { MadeForAllRepository } from "../MadeForAllRepository";
 import { MadeForAllService } from "../MadeForAllService";
+import { TrackedPlaylist } from "../../../entities";
 
 describe("MadeForAllService", () => {
     let sut: MadeForAllService;
@@ -12,7 +13,7 @@ describe("MadeForAllService", () => {
 
     beforeEach(() => {
         mockMadeForAllRepository = {
-            getMadeForAllPlaylistId: jest.fn(),
+            getTrackedPlaylist: jest.fn(),
             upsertTrackedPlaylist: jest.fn(),
             deleteMadeForAllPlaylist: jest.fn(),
         } as unknown as MadeForAllRepository;
@@ -45,10 +46,20 @@ describe("MadeForAllService", () => {
         it("should return the madeForAll playlist id if the playlist is tracked", async () => {
             // Arrange
             const madeForAllId = "made-for-all-playlist-id";
+
+            const trackedPlaylist = {
+                madeForAllPlaylist: {
+                    id: madeForAllId,
+                },
+                spotifyPlaylist: {
+                    id: "spotify-playlist-id",
+                },
+            } as TrackedPlaylist;
+
             jest.spyOn(
                 mockMadeForAllRepository,
-                "getMadeForAllPlaylistId"
-            ).mockImplementationOnce(() => Promise.resolve(madeForAllId));
+                "getTrackedPlaylist"
+            ).mockImplementationOnce(() => Promise.resolve(trackedPlaylist));
 
             // Act
             const res = await sut.getMadeForAllPlaylistId("id");
@@ -61,7 +72,7 @@ describe("MadeForAllService", () => {
             // Arrange
             jest.spyOn(
                 mockMadeForAllRepository,
-                "getMadeForAllPlaylistId"
+                "getTrackedPlaylist"
             ).mockImplementationOnce(() => Promise.resolve(null));
 
             // Act

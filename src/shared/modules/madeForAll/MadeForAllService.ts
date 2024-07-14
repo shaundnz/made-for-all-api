@@ -24,9 +24,16 @@ export class MadeForAllService {
     public async getMadeForAllPlaylistId(
         spotifyPlaylistId: string
     ): Promise<string | null> {
-        return await this.madeForAllRepository.getMadeForAllPlaylistId(
-            spotifyPlaylistId
-        );
+        const trackedPlaylist =
+            await this.madeForAllRepository.getTrackedPlaylist(
+                spotifyPlaylistId
+            );
+
+        if (!trackedPlaylist) {
+            return null;
+        }
+
+        return trackedPlaylist.madeForAllPlaylist.id;
     }
 
     public async getAllPlaylists(): Promise<
