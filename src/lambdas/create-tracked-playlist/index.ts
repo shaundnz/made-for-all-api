@@ -59,7 +59,7 @@ export const handler = async (
     );
 
     const existingMadeForAllPlaylist =
-        await madeForAllService.getMadeForAllPlaylistId(spotifyPlaylistId);
+        await madeForAllService.getTrackedPlaylist(spotifyPlaylistId);
 
     if (existingMadeForAllPlaylist !== null) {
         return {

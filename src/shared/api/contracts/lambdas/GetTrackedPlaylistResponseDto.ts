@@ -1,4 +1,6 @@
+import { PlaylistData } from "../../../entities";
+
 export interface GetTrackedPlaylistResponseDto {
-    spotifyPlaylistId: string;
-    madeForAllPlaylistId: string;
+    spotifyPlaylist: PlaylistData;
+    madeForAllPlaylist: PlaylistData;
 }

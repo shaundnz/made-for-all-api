@@ -44,24 +44,21 @@ export const handler = async (
         new SpotifyApiClient(accessToken)
     );
 
-    const madeForPlaylistId = await madeForAllService.getMadeForAllPlaylistId(
+    const trackedPlaylist = await madeForAllService.getTrackedPlaylist(
         playlistId
     );
 
-    if (!madeForPlaylistId) {
+    if (!trackedPlaylist) {
         return {
             statusCode: 404,
             body: "",
         };
     }
 
-    const responseBody: GetTrackedPlaylistResponseDto = {
-        spotifyPlaylistId: playlistId,
-        madeForAllPlaylistId: madeForPlaylistId,
-    };
+    const response: GetTrackedPlaylistResponseDto = trackedPlaylist;
 
     return {
         statusCode: 200,
-        body: JSON.stringify(responseBody),
+        body: JSON.stringify(response),
     };
 };

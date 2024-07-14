@@ -43,11 +43,11 @@ export const handler = async (
         new SpotifyApiClient(accessToken)
     );
 
-    const playlistToDelete = await madeForAllService.getMadeForAllPlaylistId(
+    const trackedPlaylist = await madeForAllService.getTrackedPlaylist(
         spotifyPlaylistId
     );
 
-    if (playlistToDelete === null) {
+    if (trackedPlaylist === null) {
         return {
             statusCode: 404,
             body: "",
@@ -56,7 +56,7 @@ export const handler = async (
 
     await madeForAllService.deleteMadeForAllPlaylist(
         spotifyPlaylistId,
-        playlistToDelete
+        trackedPlaylist.madeForAllPlaylist.id
     );
 
     return {
