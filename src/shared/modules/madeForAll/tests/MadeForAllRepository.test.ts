@@ -89,8 +89,8 @@ describe("MadeForAllRepository", () => {
         });
     });
 
-    describe("upsertMadeForAllPlaylist", () => {
-        it("should upsert the existing madeForAll playlist", async () => {
+    describe("upsertTrackedPlaylist", () => {
+        it("should upsert the existing tracked playlist", async () => {
             // Arrange
             const spotifyPlaylist = {
                 id: "spotify-playlist-id",
@@ -103,7 +103,7 @@ describe("MadeForAllRepository", () => {
             const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
 
             // Act
-            await sut.upsertMadeForAllPlaylist(
+            await sut.upsertTrackedPlaylist(
                 spotifyPlaylist,
                 madeForAllPlaylist
             );

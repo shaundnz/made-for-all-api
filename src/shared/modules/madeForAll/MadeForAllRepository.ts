@@ -33,7 +33,7 @@ export class MadeForAllRepository {
         return item.Data.madeForAllPlaylist.id;
     }
 
-    public async upsertMadeForAllPlaylist(
+    public async upsertTrackedPlaylist(
         spotifyPlaylist: PlaylistData,
         madeForAllPlaylist: PlaylistData
     ) {
