@@ -15,9 +15,9 @@ describe("DELETE /playlists/:id", () => {
         api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
         madeForAllApi = new MadeForAllApiUtils(api);
         // Create a playlist
-        const response = await madeForAllApi.createPlaylist(
-            SPOTIFY_PLAYLIST_TO_TRACK
-        );
+        const response = await madeForAllApi.createPlaylist({
+            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
+        });
         expect(response.status).toBe(201);
         createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();

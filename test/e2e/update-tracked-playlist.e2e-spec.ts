@@ -34,9 +34,9 @@ describe("PUT /playlists", () => {
         );
 
         // Note: Will need to be updated if only allow copy of spotify playlists
-        const response = await madeForAllApiUtils.createPlaylist(
-            TEST_BASE_PLAYLIST_ID
-        );
+        const response = await madeForAllApiUtils.createPlaylist({
+            spotifyPlaylistId: TEST_BASE_PLAYLIST_ID,
+        });
         expect(response.status).toBe(201);
         createdTestPlaylist = response.body.madeForAllPlaylist.id;
         expect(createdTestPlaylist).toBeDefined();
@@ -66,7 +66,9 @@ describe("PUT /playlists", () => {
         );
         await new Promise((r) => setTimeout(r, 3000));
 
-        await madeForAllApiUtils.updatePlaylist(TEST_BASE_PLAYLIST_ID);
+        await madeForAllApiUtils.updatePlaylist({
+            spotifyPlaylistId: TEST_BASE_PLAYLIST_ID,
+        });
         await new Promise((r) => setTimeout(r, 3000));
 
         const playlistAfterUpdateOne = await spotifyApiUtils.getPlaylist(
@@ -84,7 +86,9 @@ describe("PUT /playlists", () => {
         );
         await new Promise((r) => setTimeout(r, 3000));
 
-        await madeForAllApiUtils.updatePlaylist(TEST_BASE_PLAYLIST_ID);
+        await madeForAllApiUtils.updatePlaylist({
+            spotifyPlaylistId: TEST_BASE_PLAYLIST_ID,
+        });
         await new Promise((r) => setTimeout(r, 3000));
 
         const playlistAfterUpdateTwo = await spotifyApiUtils.getPlaylist(
@@ -97,7 +101,9 @@ describe("PUT /playlists", () => {
     });
 
     it("should return a 404 response if the playlist does not exist", async () => {
-        const response = await madeForAllApiUtils.updatePlaylist("123");
+        const response = await madeForAllApiUtils.updatePlaylist({
+            spotifyPlaylistId: "123",
+        });
         expect(response.status).toBe(404);
     });
 

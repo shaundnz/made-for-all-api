@@ -3,6 +3,7 @@ import {
     DynamoDBDocumentClient,
     GetCommand,
     PutCommand,
+    QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBItem, PlaylistData, TrackedPlaylist } from "../../entities";
 
@@ -13,13 +14,41 @@ export class MadeForAllRepository {
         this.dynamo = dynamo;
     }
 
+    public async getAllTrackedPlaylists(): Promise<TrackedPlaylist[]> {
+        const getAllPlaylistsOutput = await this.dynamo.send(
+            new QueryCommand({
+                TableName: process.env.DYNAMO_TABLE_NAME,
+                KeyConditionExpression:
+                    "#PartitionKey = :trackedPlaylistPartitionKey",
+                ExpressionAttributeNames: {
+                    "#PartitionKey": "PartitionKey",
+                },
+                ExpressionAttributeValues: {
+                    ":trackedPlaylistPartitionKey": `TrackedPlaylist`,
+                },
+            })
+        );
+
+        if (!getAllPlaylistsOutput.Items) {
+            return [];
+        }
+
+        const allPlaylistItems =
+            getAllPlaylistsOutput.Items as DynamoDBItem<TrackedPlaylist>[];
+
+        return allPlaylistItems.map((item) => item.Data);
+    }
+
     public async getTrackedPlaylist(
         spotifyPlaylistId: string
     ): Promise<TrackedPlaylist | null> {
         const getMadeForAllPlaylistOutput = await this.dynamo.send(
             new GetCommand({
                 TableName: process.env.DYNAMO_TABLE_NAME,
-                Key: { PartitionKey: spotifyPlaylistId },
+                Key: {
+                    PartitionKey: "TrackedPlaylist",
+                    SortKey: spotifyPlaylistId,
+                },
             })
         );
 
@@ -38,7 +67,8 @@ export class MadeForAllRepository {
         madeForAllPlaylist: PlaylistData
     ) {
         const item: DynamoDBItem<TrackedPlaylist> = {
-            PartitionKey: spotifyPlaylist.id,
+            PartitionKey: "TrackedPlaylist",
+            SortKey: spotifyPlaylist.id,
             Data: {
                 spotifyPlaylist: spotifyPlaylist,
                 madeForAllPlaylist: madeForAllPlaylist,
@@ -60,7 +90,8 @@ export class MadeForAllRepository {
             new DeleteCommand({
                 TableName: process.env.DYNAMO_TABLE_NAME,
                 Key: {
-                    PartitionKey: spotifyPlaylistId,
+                    PartitionKey: "TrackedPlaylist",
+                    SortKey: spotifyPlaylistId,
                 },
             })
         );

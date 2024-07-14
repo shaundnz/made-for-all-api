@@ -11,6 +11,10 @@ export class MadeForAllApiStack extends cdk.Stack {
                 name: "PartitionKey",
                 type: cdk.aws_dynamodb.AttributeType.STRING,
             },
+            sortKey: {
+                name: "SortKey",
+                type: cdk.aws_dynamodb.AttributeType.STRING,
+            },
             billing: cdk.aws_dynamodb.Billing.onDemand(),
         });
 

@@ -1,6 +1,5 @@
 import { Playlist, Track } from "@spotify/web-api-ts-sdk";
 import { SpotifyApiClient } from "../../../api";
-import { AllPlaylistsRepository } from "../AllPlaylistsRepository";
 import { MadeForAllRepository } from "../MadeForAllRepository";
 import { MadeForAllService } from "../MadeForAllService";
 import { TrackedPlaylist } from "../../../entities";
@@ -8,21 +7,15 @@ import { TrackedPlaylist } from "../../../entities";
 describe("MadeForAllService", () => {
     let sut: MadeForAllService;
     let mockMadeForAllRepository: MadeForAllRepository;
-    let mockAllPlaylistsRepository: AllPlaylistsRepository;
     let mockSpotifyApiClient: SpotifyApiClient;
 
     beforeEach(() => {
         mockMadeForAllRepository = {
             getTrackedPlaylist: jest.fn(),
+            getAllTrackedPlaylists: jest.fn(),
             upsertTrackedPlaylist: jest.fn(),
             deleteMadeForAllPlaylist: jest.fn(),
         } as unknown as MadeForAllRepository;
-
-        mockAllPlaylistsRepository = {
-            getAllPlaylists: jest.fn(),
-            addPlaylistToDenormalizedAllPlaylistsItem: jest.fn(),
-            removePlaylistFromDenormalizedAllPlaylistsItem: jest.fn(),
-        } as unknown as AllPlaylistsRepository;
 
         mockSpotifyApiClient = {
             getPlaylistWithAllTracks: jest.fn(),
@@ -33,7 +26,6 @@ describe("MadeForAllService", () => {
 
         sut = new MadeForAllService(
             mockMadeForAllRepository,
-            mockAllPlaylistsRepository,
             mockSpotifyApiClient
         );
     });
@@ -83,43 +75,52 @@ describe("MadeForAllService", () => {
         });
     });
 
-    describe("getAllPlaylists", () => {
+    describe("getAllTrackedPlaylists", () => {
         it("should return a list of all playlists", async () => {
             // Arrange
+            const trackedPlaylistOne = {
+                madeForAllPlaylist: {
+                    id: "made-for-all-playlist-id-1",
+                },
+                spotifyPlaylist: {
+                    id: "spotify-playlist-id-1",
+                },
+            } as TrackedPlaylist;
+
+            const trackedPlaylistTwo = {
+                madeForAllPlaylist: {
+                    id: "made-for-all-playlist-id-2",
+                },
+                spotifyPlaylist: {
+                    id: "spotify-playlist-id-2",
+                },
+            } as TrackedPlaylist;
+
             jest.spyOn(
-                mockAllPlaylistsRepository,
-                "getAllPlaylists"
+                mockMadeForAllRepository,
+                "getAllTrackedPlaylists"
             ).mockImplementationOnce(() =>
-                Promise.resolve({
-                    a: "1",
-                    b: "2",
-                })
+                Promise.resolve([trackedPlaylistOne, trackedPlaylistTwo])
             );
 
             // Act
-            const allPlaylists = await sut.getAllPlaylists();
+            const allPlaylists = await sut.getAllTrackedPlaylists();
 
             // Assert
             expect(allPlaylists.length).toBe(2);
-            expect(allPlaylists[0]).toEqual({
-                spotifyPlaylistId: "a",
-                madeForAllPlaylistId: "1",
-            });
-            expect(allPlaylists[1]).toEqual({
-                spotifyPlaylistId: "b",
-                madeForAllPlaylistId: "2",
-            });
+            expect(allPlaylists).toContain(trackedPlaylistOne);
+            expect(allPlaylists).toContain(trackedPlaylistTwo);
         });
 
         it("should return a empty list if no playlists exist", async () => {
             // Arrange
             jest.spyOn(
-                mockAllPlaylistsRepository,
-                "getAllPlaylists"
-            ).mockImplementationOnce(() => Promise.resolve(null));
+                mockMadeForAllRepository,
+                "getAllTrackedPlaylists"
+            ).mockImplementationOnce(() => Promise.resolve([]));
 
             // Act
-            const allPlaylists = await sut.getAllPlaylists();
+            const allPlaylists = await sut.getAllTrackedPlaylists();
 
             // Assert
             expect(allPlaylists.length).toBe(0);
@@ -158,11 +159,6 @@ describe("MadeForAllService", () => {
                 "upsertTrackedPlaylist"
             );
 
-            const addPlaylistToDenormalizedAllPlaylistsItemSpy = jest.spyOn(
-                mockAllPlaylistsRepository,
-                "addPlaylistToDenormalizedAllPlaylistsItem"
-            );
-
             // Act
             const createMadeForAllPlaylistResponse =
                 await sut.createMadeForAllPlaylist(spotifyPlaylistId);
@@ -182,9 +178,6 @@ describe("MadeForAllService", () => {
                 existingSpotifyPlaylist,
                 newMadeForAllPlaylist
             );
-            expect(
-                addPlaylistToDenormalizedAllPlaylistsItemSpy
-            ).toHaveBeenCalledWith(spotifyPlaylistId, newMadeForAllPlaylist.id);
 
             expect(createMadeForAllPlaylistResponse).toStrictEqual({
                 spotifyPlaylist: existingSpotifyPlaylist,
@@ -255,12 +248,6 @@ describe("MadeForAllService", () => {
                 "deleteMadeForAllPlaylist"
             );
 
-            const removePlaylistFromDenormalizedAllPlaylistsItemSpy =
-                jest.spyOn(
-                    mockAllPlaylistsRepository,
-                    "removePlaylistFromDenormalizedAllPlaylistsItem"
-                );
-
             // Act
             await sut.deleteMadeForAllPlaylist(
                 spotifyPlaylistId,
@@ -274,9 +261,6 @@ describe("MadeForAllService", () => {
             expect(deleteMadeForAllPlaylistSpy).toHaveBeenCalledWith(
                 spotifyPlaylistId
             );
-            expect(
-                removePlaylistFromDenormalizedAllPlaylistsItemSpy
-            ).toHaveBeenCalledWith(spotifyPlaylistId);
         });
     });
 });

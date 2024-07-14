@@ -8,7 +8,6 @@ import {
 } from "../../shared/modules/accessToken";
 import { SpotifyAccessTokenApiClient } from "../../shared/api";
 import {
-    AllPlaylistsRepository,
     MadeForAllRepository,
     MadeForAllService,
 } from "../../shared/modules/madeForAll";
@@ -54,7 +53,6 @@ export const handler = async (
 
     const madeForAllService = new MadeForAllService(
         new MadeForAllRepository(dynamo),
-        new AllPlaylistsRepository(dynamo),
         new SpotifyApiClient(accessToken)
     );
 

@@ -1,7 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { APIGatewayProxyResult } from "aws-lambda";
 import {
-    AllPlaylistsRepository,
     MadeForAllRepository,
     MadeForAllService,
 } from "../../shared/modules/madeForAll";
@@ -31,11 +30,11 @@ export const handler = async (): Promise<APIGatewayProxyResult> => {
 
     const madeForAllService = new MadeForAllService(
         new MadeForAllRepository(dynamo),
-        new AllPlaylistsRepository(dynamo),
         new SpotifyApiClient(accessToken)
     );
 
-    const allPlaylistsResponse = await madeForAllService.getAllPlaylists();
+    const allPlaylistsResponse =
+        await madeForAllService.getAllTrackedPlaylists();
 
     return {
         statusCode: 200,
