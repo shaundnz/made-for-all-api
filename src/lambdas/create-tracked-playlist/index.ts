@@ -70,14 +70,8 @@ export const handler = async (
         };
     }
 
-    const newPlaylist = await madeForAllService.createMadeForAllPlaylist(
-        spotifyPlaylistId
-    );
-
-    const response: CreateTrackedPlaylistResponseDto = {
-        spotifyPlaylistId: spotifyPlaylistId,
-        madeForAllPlaylistId: newPlaylist.id,
-    };
+    const response: CreateTrackedPlaylistResponseDto =
+        await madeForAllService.createMadeForAllPlaylist(spotifyPlaylistId);
 
     return {
         statusCode: 201,

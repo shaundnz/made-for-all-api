@@ -1,7 +1,9 @@
-import { Playlist, TrackItem } from "@spotify/web-api-ts-sdk";
 import { SpotifyApiClient } from "../../api";
 import { MadeForAllRepository } from "./MadeForAllRepository";
-import { GetAllTrackedPlaylistResponseDto } from "../../api/contracts";
+import {
+    CreateTrackedPlaylistResponseDto,
+    GetAllTrackedPlaylistResponseDto,
+} from "../../api/contracts";
 import { AllPlaylistsRepository } from "./AllPlaylistsRepository";
 
 export class MadeForAllService {
@@ -45,7 +47,7 @@ export class MadeForAllService {
 
     public async createMadeForAllPlaylist(
         spotifyPlaylistId: string
-    ): Promise<Playlist<TrackItem>> {
+    ): Promise<CreateTrackedPlaylistResponseDto> {
         const originalPlaylist =
             await this.spotifyApiClient.getPlaylistWithAllTracks(
                 spotifyPlaylistId
@@ -78,7 +80,10 @@ export class MadeForAllService {
             newPlaylist.id
         );
 
-        return newPlaylist;
+        return {
+            spotifyPlaylist: originalPlaylistWithoutTracks,
+            madeForAllPlaylist: newPlaylistWithoutTracks,
+        };
     }
 
     public async updateMadeForAllPlaylist(

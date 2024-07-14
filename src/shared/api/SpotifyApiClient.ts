@@ -82,16 +82,17 @@ export class SpotifyApiClient {
                 }
             );
 
-        const playlistCover = await this.getPlaylistCoverImageInBase64String(
-            originalPlaylist
-        );
+        // Skip this, causes too many e2e issues
+        // const playlistCover = await this.getPlaylistCoverImageInBase64String(
+        //     originalPlaylist
+        // );
 
-        await new Promise((r) => setTimeout(r, 400));
+        // await new Promise((r) => setTimeout(r, 500));
 
-        await this.authenticatedMadeForAllClient.playlists.addCustomPlaylistCoverImageFromBase64String(
-            createdPlaylist.id,
-            playlistCover
-        );
+        // await this.authenticatedMadeForAllClient.playlists.addCustomPlaylistCoverImageFromBase64String(
+        //     createdPlaylist.id,
+        //     playlistCover
+        // );
 
         return createdPlaylist;
     }
@@ -138,15 +139,16 @@ export class SpotifyApiClient {
         );
     }
 
-    private async getPlaylistCoverImageInBase64String(
-        playlist: Playlist<Track>
-    ): Promise<string> {
-        const imageUrl = playlist.images[0].url;
+    // TODO: Add back once adding playlist image works consistently
+    // private async getPlaylistCoverImageInBase64String(
+    //     playlist: Playlist<Track>
+    // ): Promise<string> {
+    //     const imageUrl = playlist.images[0].url;
 
-        const res = await fetch(imageUrl);
+    //     const res = await fetch(imageUrl);
 
-        const imageBuffer = await res.arrayBuffer();
+    //     const imageBuffer = await res.arrayBuffer();
 
-        return Buffer.from(imageBuffer).toString("base64");
-    }
+    //     return Buffer.from(imageBuffer).toString("base64");
+    // }
 }
