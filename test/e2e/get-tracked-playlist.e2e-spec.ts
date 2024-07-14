@@ -36,10 +36,17 @@ describe("GET /playlists/:id", () => {
             SPOTIFY_PLAYLIST_TO_TRACK
         );
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({
-            spotifyPlaylistId: SPOTIFY_PLAYLIST_TO_TRACK,
-            madeForAllPlaylistId: createdTestPlaylist,
-        });
+        expect(response.body.spotifyPlaylist).toBeDefined();
+        expect(response.body.spotifyPlaylist.id).toBe(
+            SPOTIFY_PLAYLIST_TO_TRACK
+        );
+        expect(response.body.spotifyPlaylist.name).toBe("Givin It Up Radio");
+
+        expect(response.body.madeForAllPlaylist).toBeDefined();
+        expect(response.body.madeForAllPlaylist.id).toBeDefined();
+        expect(response.body.madeForAllPlaylist.name).toBe(
+            "MadeForAll - Givin It Up Radio"
+        );
     });
 
     it("should return a 404 response if the playlist does not exist", async () => {

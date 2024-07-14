@@ -5,6 +5,7 @@ import {
     GetAllTrackedPlaylistResponseDto,
 } from "../../api/contracts";
 import { AllPlaylistsRepository } from "./AllPlaylistsRepository";
+import { TrackedPlaylist } from "../../entities";
 
 export class MadeForAllService {
     private madeForAllRepository: MadeForAllRepository;
@@ -21,9 +22,9 @@ export class MadeForAllService {
         this.spotifyApiClient = spotifyApiClient;
     }
 
-    public async getMadeForAllPlaylistId(
+    public async getTrackedPlaylist(
         spotifyPlaylistId: string
-    ): Promise<string | null> {
+    ): Promise<TrackedPlaylist | null> {
         const trackedPlaylist =
             await this.madeForAllRepository.getTrackedPlaylist(
                 spotifyPlaylistId
@@ -33,7 +34,7 @@ export class MadeForAllService {
             return null;
         }
 
-        return trackedPlaylist.madeForAllPlaylist.id;
+        return trackedPlaylist;
     }
 
     public async getAllPlaylists(): Promise<

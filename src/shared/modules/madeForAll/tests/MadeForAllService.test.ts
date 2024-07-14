@@ -42,8 +42,8 @@ describe("MadeForAllService", () => {
         jest.resetAllMocks();
     });
 
-    describe("getMadeForAllPlaylistId", () => {
-        it("should return the madeForAll playlist id if the playlist is tracked", async () => {
+    describe("getTrackedPlaylist", () => {
+        it("should return the tracked playlist if the playlist exists", async () => {
             // Arrange
             const madeForAllId = "made-for-all-playlist-id";
 
@@ -62,10 +62,10 @@ describe("MadeForAllService", () => {
             ).mockImplementationOnce(() => Promise.resolve(trackedPlaylist));
 
             // Act
-            const res = await sut.getMadeForAllPlaylistId("id");
+            const res = await sut.getTrackedPlaylist("id");
 
             // Assert
-            expect(res).toBe(madeForAllId);
+            expect(res).toBe(trackedPlaylist);
         });
 
         it("should return null if the playlist is not tracked", async () => {
@@ -76,7 +76,7 @@ describe("MadeForAllService", () => {
             ).mockImplementationOnce(() => Promise.resolve(null));
 
             // Act
-            const res = await sut.getMadeForAllPlaylistId("id");
+            const res = await sut.getTrackedPlaylist("id");
 
             // Assert
             expect(res).toBeNull();
