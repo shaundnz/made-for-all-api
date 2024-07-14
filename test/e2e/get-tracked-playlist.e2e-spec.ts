@@ -44,7 +44,7 @@ describe("GET /playlists/:id", () => {
 
         expect(response.body.madeForAllPlaylist).toBeDefined();
         expect(response.body.madeForAllPlaylist.id).toBeDefined();
-        expect(response.body.spotifyPlaylist.name).toBe(
+        expect(response.body.madeForAllPlaylist.name).toBe(
             "Made For All - Givin It Up Radio"
         );
     });
