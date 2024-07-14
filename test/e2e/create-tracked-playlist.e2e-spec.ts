@@ -38,7 +38,11 @@ describe("POST /playlists", () => {
         expect(response.body.spotifyPlaylist.id).toBe(
             SPOTIFY_PLAYLIST_TO_TRACK
         );
+        expect(response.body.spotifyPlaylist.name).toBe("Ice & Fire Radio");
         expect(response.body.madeForAllPlaylist.id).toBeDefined();
+        expect(response.body.madeForAllPlaylist.name).toBe(
+            "MadeForAll - Ice & Fire Radio"
+        );
 
         // Required to get most up to date playlist items
         // See note in update-tracked-playlist.e2e-spec.ts for more info
