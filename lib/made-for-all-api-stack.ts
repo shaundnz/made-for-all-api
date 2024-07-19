@@ -94,7 +94,11 @@ export class MadeForAllApiStack extends cdk.Stack {
 
         const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api", {
             defaultCorsPreflightOptions: {
-                allowOrigins: ["http://localhost:5173"],
+                allowOrigins: [
+                    // Allows the OPTIONS header, but nothing else, CORS headers still need to be added manually in the lamdba
+                    `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+                    `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+                ],
             },
         });
 
@@ -162,6 +166,8 @@ export class MadeForAllApiStack extends cdk.Stack {
             SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET || "",
             SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
                 process.env.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN || "",
+            MADE_FOR_ALL_CLIENT_BASE_URL:
+                process.env.MADE_FOR_ALL_CLIENT_BASE_URL || "",
         };
     }
 }

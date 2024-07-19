@@ -24,3 +24,28 @@ export const safeParseJSON = (data: any) => {
         return null;
     }
 };
+
+export const getCorsHeaders = (
+    origin: string
+):
+    | {}
+    | {
+          "Access-Control-Allow-Headers": string;
+          "Access-Control-Allow-Origin": string;
+          "Access-Control-Allow-Methods": string;
+      } => {
+    const allowedDomains = [
+        `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+        `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+    ];
+
+    if (allowedDomains.findIndex((domain) => domain === origin) === -1) {
+        return {};
+    }
+
+    return {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "*",
+    };
+};

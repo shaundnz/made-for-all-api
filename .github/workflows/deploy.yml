@@ -29,6 +29,7 @@ jobs:
 
     env:
       MADE_FOR_ALL_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
+      MADE_FOR_ALL_CLIENT_BASE_URL: ${{ vars.MADE_FOR_ALL_CLIENT_BASE_URL }}
 
     steps:
       - name: Checkout
