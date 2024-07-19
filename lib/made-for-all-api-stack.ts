@@ -97,8 +97,6 @@ export class MadeForAllApiStack extends cdk.Stack {
                 allowOrigins: [
                     "https://madeforall.test.shaundnz.com",
                     "https://www.madeforall.test.shaundnz.com",
-                    `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
-                    `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                 ],
             },
         });
