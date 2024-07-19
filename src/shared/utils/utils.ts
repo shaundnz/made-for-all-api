@@ -25,8 +25,19 @@ export const safeParseJSON = (data: any) => {
     }
 };
 
-export const getCorsHeaders = () => ({
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Origin": `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
-    "Access-Control-Allow-Methods": "*",
-});
+export const getCorsHeaders = (origin: string) => {
+    const allowedDomains = [
+        `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+        `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+    ];
+
+    if (allowedDomains.findIndex((domain) => domain === origin) === -1) {
+        return null;
+    }
+
+    return {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "*",
+    };
+};

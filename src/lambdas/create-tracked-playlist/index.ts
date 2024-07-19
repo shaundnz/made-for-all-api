@@ -73,7 +73,7 @@ export const handler = async (
 
     return {
         statusCode: 201,
-        headers: getCorsHeaders(),
+        headers: getCorsHeaders(event.headers.origin || "") ?? {},
         body: JSON.stringify(response),
     };
 };

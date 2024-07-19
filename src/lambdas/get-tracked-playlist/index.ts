@@ -58,7 +58,7 @@ export const handler = async (
 
     return {
         statusCode: 200,
-        headers: getCorsHeaders(),
+        headers: getCorsHeaders(event.headers.origin || "") ?? {},
         body: JSON.stringify(response),
     };
 };
