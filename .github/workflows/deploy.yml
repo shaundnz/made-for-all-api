@@ -63,6 +63,9 @@ jobs:
           SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
           AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - name: Run E2E tests
         run: npm run test:e2e
         env:
