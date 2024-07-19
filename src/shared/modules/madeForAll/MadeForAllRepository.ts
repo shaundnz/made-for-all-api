@@ -1,8 +1,8 @@
 import {
-    DeleteCommand,
     DynamoDBDocumentClient,
     GetCommand,
     PutCommand,
+    DeleteCommand,
     QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBItem, PlaylistData, TrackedPlaylist } from "../../entities";
