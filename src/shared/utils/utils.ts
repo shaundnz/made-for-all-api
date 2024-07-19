@@ -27,6 +27,6 @@ export const safeParseJSON = (data: any) => {
 
 export const getCorsHeaders = () => ({
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Origin": `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}, https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+    "Access-Control-Allow-Origin": `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
     "Access-Control-Allow-Methods": "*",
 });

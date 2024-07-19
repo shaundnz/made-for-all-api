@@ -95,7 +95,7 @@ export class MadeForAllApiStack extends cdk.Stack {
         const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api", {
             defaultCorsPreflightOptions: {
                 allowOrigins: [
-                    // For local development with SAM. Actual deployment requires headers to be manually added in each lambda
+                    // Allows the OPTIONS header, but nothing else, CORS headers still need to be added manually in the lamdba
                     `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                     `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                 ],
