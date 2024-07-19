@@ -3,6 +3,7 @@ import TestAgent = require("supertest/lib/agent");
 import {
     MadeForAllApiUtils,
     SpotifyApiUtils,
+    assertCreatedRecently,
     delayTestSuiteStart,
 } from "./utils";
 
@@ -41,6 +42,8 @@ describe("POST /playlists", () => {
         expect(body.madeForAllPlaylist.name).toBe(
             "MadeForAll - Ice & Fire Radio"
         );
+        expect(body.madeForAllPlaylist.createdAt).toBeDefined();
+        assertCreatedRecently(body.madeForAllPlaylist.createdAt);
 
         // Required to get most up to date playlist items
         // See note in update-tracked-playlist.e2e-spec.ts for more info

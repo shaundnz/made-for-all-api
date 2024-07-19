@@ -129,6 +129,10 @@ describe("MadeForAllService", () => {
 
     describe("createMadeForAllPlaylist", () => {
         it("should create the playlist", async () => {
+            const now = new Date(2024, 6, 19);
+            jest.useFakeTimers();
+            jest.setSystemTime(now);
+
             // Arrange
             const spotifyPlaylistId = "spotify-playlist-id-123";
             const existingSpotifyPlaylist = {
@@ -174,15 +178,24 @@ describe("MadeForAllService", () => {
                 existingSpotifyPlaylist,
                 newMadeForAllPlaylist
             );
-            expect(upsertTrackedPlaylistSpy).toHaveBeenCalledWith(
-                existingSpotifyPlaylist,
-                newMadeForAllPlaylist
-            );
+
+            expect(upsertTrackedPlaylistSpy).toHaveBeenCalledWith({
+                spotifyPlaylist: existingSpotifyPlaylist,
+                madeForAllPlaylist: {
+                    ...newMadeForAllPlaylist,
+                    createdAt: now.toISOString(),
+                },
+            });
 
             expect(createMadeForAllPlaylistResponse).toStrictEqual({
                 spotifyPlaylist: existingSpotifyPlaylist,
-                madeForAllPlaylist: newMadeForAllPlaylist,
+                madeForAllPlaylist: {
+                    ...newMadeForAllPlaylist,
+                    createdAt: now.toISOString(),
+                },
             });
+
+            jest.useRealTimers();
         });
     });
 

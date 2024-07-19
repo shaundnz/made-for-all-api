@@ -45,6 +45,7 @@ describe("GET /playlists/:id", () => {
         expect(body.madeForAllPlaylist.name).toBe(
             "MadeForAll - Givin It Up Radio"
         );
+        expect(body.madeForAllPlaylist.createdAt).toBeDefined();
     });
 
     it("should return a 404 response if the playlist does not exist", async () => {

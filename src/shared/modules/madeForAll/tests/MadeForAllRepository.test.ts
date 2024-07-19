@@ -6,11 +6,16 @@ import {
     QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { MadeForAllRepository } from "../MadeForAllRepository";
-import { PlaylistData, TrackedPlaylist } from "../../../entities";
+import {
+    MadeForAllPlaylistData,
+    PlaylistData,
+    TrackedPlaylist,
+} from "../../../entities";
 
 describe("MadeForAllRepository", () => {
     let sut: MadeForAllRepository;
     let mockDynamoDBDocumentClient: DynamoDBDocumentClient;
+    let now = new Date(2024, 6, 19).toISOString();
 
     beforeEach(() => {
         mockDynamoDBDocumentClient = {
@@ -32,6 +37,7 @@ describe("MadeForAllRepository", () => {
             const trackedPlaylist = {
                 madeForAllPlaylist: {
                     id: "made-for-all-playlist-id",
+                    createdAt: now,
                 },
                 spotifyPlaylist: {
                     id: spotifyPlaylistId,
@@ -45,7 +51,13 @@ describe("MadeForAllRepository", () => {
                         {
                             PartitionKey: "TrackedPlaylist",
                             SortKey: spotifyPlaylistId,
-                            Data: trackedPlaylist,
+                            Data: {
+                                ...trackedPlaylist,
+                                madeForAllPlaylist: {
+                                    ...trackedPlaylist.madeForAllPlaylist,
+                                    createdAt: now,
+                                },
+                            },
                         },
                     ],
                 })
@@ -69,7 +81,7 @@ describe("MadeForAllRepository", () => {
             });
 
             expect(res.length).toBe(1);
-            expect(res[0]).toBe(trackedPlaylist);
+            expect(res[0]).toEqual(trackedPlaylist);
         });
 
         it("should return a empty list if no tracked playlists exist", async () => {
@@ -110,6 +122,7 @@ describe("MadeForAllRepository", () => {
             const trackedPlaylist = {
                 madeForAllPlaylist: {
                     id: "made-for-all-playlist-id",
+                    createdAt: now,
                 },
                 spotifyPlaylist: {
                     id: spotifyPlaylistId,
@@ -122,7 +135,13 @@ describe("MadeForAllRepository", () => {
                     Item: {
                         PartitionKey: "TrackedPlaylist",
                         SortKey: spotifyPlaylistId,
-                        Data: trackedPlaylist,
+                        Data: {
+                            ...trackedPlaylist,
+                            madeForAllPlaylist: {
+                                ...trackedPlaylist.madeForAllPlaylist,
+                                createdAt: now,
+                            },
+                        },
                     },
                 })
             );
@@ -141,7 +160,7 @@ describe("MadeForAllRepository", () => {
                 SortKey: spotifyPlaylistId,
             });
 
-            expect(res).toBe(trackedPlaylist);
+            expect(res).toEqual(trackedPlaylist);
         });
 
         it("should return null if the playlist does not exist", async () => {
@@ -180,15 +199,16 @@ describe("MadeForAllRepository", () => {
 
             const madeForAllPlaylist = {
                 id: "made-for-all-playlist-id",
-            } as PlaylistData;
+                createdAt: now,
+            } as MadeForAllPlaylistData;
 
             const sendSpy = jest.spyOn(mockDynamoDBDocumentClient, "send");
 
             // Act
-            await sut.upsertTrackedPlaylist(
+            await sut.upsertTrackedPlaylist({
                 spotifyPlaylist,
-                madeForAllPlaylist
-            );
+                madeForAllPlaylist,
+            });
 
             // Assert
             expect(sendSpy).toHaveBeenCalled();
@@ -203,7 +223,10 @@ describe("MadeForAllRepository", () => {
                 SortKey: spotifyPlaylist.id,
                 Data: {
                     spotifyPlaylist: spotifyPlaylist,
-                    madeForAllPlaylist: madeForAllPlaylist,
+                    madeForAllPlaylist: {
+                        id: "made-for-all-playlist-id",
+                        createdAt: now,
+                    },
                 },
             });
         });
