@@ -8,6 +8,7 @@ declare global {
             SPOTIFY_CLIENT_SECRET: string;
             SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: string;
             MADE_FOR_ALL_API_BASE_URL: string;
+            MADE_FOR_ALL_CLIENT_BASE_URL: string;
             AWS_CERTIFICATE_ARN: string;
         }
     }
