@@ -18,12 +18,17 @@ on:
         required: true
       SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
         required: true
+      AWS_CERTIFICATE_ARN:
+        required: true
 
 jobs:
   deploy:
     name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+
+    env:
+      MADE_FOR_ALL_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
 
     steps:
       - name: Checkout
@@ -46,6 +51,8 @@ jobs:
 
       - name: Synth stack
         run: cdk synth
+        env:
+          AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
 
       - name: Deploy stack
         run: cdk deploy --require-approval never --outputs-file cdk-deploy-output.json
