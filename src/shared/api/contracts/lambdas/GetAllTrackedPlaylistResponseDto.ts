@@ -1,6 +1,6 @@
-import { PlaylistData } from "../../../entities";
+import { MadeForAllPlaylistData, PlaylistData } from "../../../entities";
 
 export type GetAllTrackedPlaylistResponseDto = {
     spotifyPlaylist: PlaylistData;
-    madeForAllPlaylist: PlaylistData;
+    madeForAllPlaylist: MadeForAllPlaylistData;
 }[];

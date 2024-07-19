@@ -5,7 +5,7 @@ import {
     DeleteCommand,
     QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBItem, PlaylistData, TrackedPlaylist } from "../../entities";
+import { DynamoDBItem, TrackedPlaylist } from "../../entities";
 
 export class MadeForAllRepository {
     private dynamo: DynamoDBDocumentClient;
@@ -62,17 +62,11 @@ export class MadeForAllRepository {
         return item.Data;
     }
 
-    public async upsertTrackedPlaylist(
-        spotifyPlaylist: PlaylistData,
-        madeForAllPlaylist: PlaylistData
-    ) {
+    public async upsertTrackedPlaylist(trackedPlaylist: TrackedPlaylist) {
         const item: DynamoDBItem<TrackedPlaylist> = {
             PartitionKey: "TrackedPlaylist",
-            SortKey: spotifyPlaylist.id,
-            Data: {
-                spotifyPlaylist: spotifyPlaylist,
-                madeForAllPlaylist: madeForAllPlaylist,
-            },
+            SortKey: trackedPlaylist.spotifyPlaylist.id,
+            Data: trackedPlaylist,
         };
 
         await this.dynamo.send(

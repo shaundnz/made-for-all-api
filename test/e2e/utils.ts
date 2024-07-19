@@ -142,3 +142,13 @@ export const getApiBaseUrl = () => {};
 export const delayTestSuiteStart = async () => {
     await new Promise((r) => setTimeout(r, 2000));
 };
+
+export const assertCreatedRecently = (createdAt: string) => {
+    // Add 1000ms to account for fractional second weirdness
+    const now = new Date().getTime() + 1000;
+    // 15 seconds ago
+    const recent = now - 15000;
+
+    expect(new Date(createdAt).getTime()).toBeGreaterThan(recent);
+    expect(new Date(createdAt).getTime()).toBeLessThan(now);
+};

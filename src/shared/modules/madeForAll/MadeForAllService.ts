@@ -65,19 +65,19 @@ export class MadeForAllService {
         const { tracks: newPlaylistTracks, ...newPlaylistWithoutTracks } =
             newPlaylist;
 
-        await this.madeForAllRepository.upsertTrackedPlaylist(
-            originalPlaylistWithoutTracks,
-            newPlaylistWithoutTracks
-        );
+        const newPlaylistWithoutTracksAndCreatedAtDate = {
+            ...newPlaylistWithoutTracks,
+            createdAt: new Date().toISOString(),
+        };
 
-        // await this.allPlaylistsRepository.addPlaylistToDenormalizedAllPlaylistsItem(
-        //     spotifyPlaylistId,
-        //     newPlaylist.id
-        // );
+        await this.madeForAllRepository.upsertTrackedPlaylist({
+            spotifyPlaylist: originalPlaylistWithoutTracks,
+            madeForAllPlaylist: newPlaylistWithoutTracksAndCreatedAtDate,
+        });
 
         return {
             spotifyPlaylist: originalPlaylistWithoutTracks,
-            madeForAllPlaylist: newPlaylistWithoutTracks,
+            madeForAllPlaylist: newPlaylistWithoutTracksAndCreatedAtDate,
         };
     }
 
