@@ -52,5 +52,6 @@ describe("GET /playlists", () => {
         expect(addedPlaylist?.madeForAllPlaylist.name).toBe(
             "MadeForAll - Otis McMusic Radio"
         );
+        expect(addedPlaylist?.madeForAllPlaylist.createdAt).toBeDefined();
     });
 });
