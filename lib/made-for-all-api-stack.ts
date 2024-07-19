@@ -150,8 +150,6 @@ export class MadeForAllApiStack extends cdk.Stack {
                 deleteTrackedPlaylistLambda
             )
         );
-
-        new cdk.CfnOutput(this, "MadeForAllApi", { value: api.url });
     }
 
     private getLambdaEnvVariables(
