@@ -60,7 +60,7 @@ export const handler = async (
 
     return {
         statusCode: 200,
-        headers: getCorsHeaders(event.headers.origin || "") ?? {},
+        headers: getCorsHeaders(event.headers.origin || ""),
         body: JSON.stringify({ message: "Playlist Deleted" }),
     };
 };
