@@ -17,7 +17,7 @@ import {
     CreateTrackedPlaylistResponseDto,
 } from "../../shared/api/contracts";
 import { SafeParseReturnType } from "zod";
-import { safeParseJSON } from "../../shared/utils";
+import { getCorsHeaders, safeParseJSON } from "../../shared/utils";
 
 const client = new DynamoDBClient({
     endpoint: process.env.DYNAMO_ENDPOINT,
@@ -73,6 +73,7 @@ export const handler = async (
 
     return {
         statusCode: 201,
+        headers: getCorsHeaders(),
         body: JSON.stringify(response),
     };
 };

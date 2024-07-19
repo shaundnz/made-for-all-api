@@ -14,6 +14,7 @@ import {
     SpotifyAccessTokenApiClient,
     SpotifyApiClient,
 } from "../../shared/api";
+import { getCorsHeaders } from "../../shared/utils";
 
 const client = new DynamoDBClient({
     endpoint: process.env.DYNAMO_ENDPOINT,
@@ -57,6 +58,7 @@ export const handler = async (
 
     return {
         statusCode: 200,
+        headers: getCorsHeaders(),
         body: JSON.stringify(response),
     };
 };

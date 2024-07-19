@@ -13,6 +13,7 @@ import {
     AccessTokenRepository,
     AccessTokenService,
 } from "../../shared/modules/accessToken";
+import { getCorsHeaders } from "../../shared/utils";
 
 const client = new DynamoDBClient({
     endpoint: process.env.DYNAMO_ENDPOINT,
@@ -38,6 +39,7 @@ export const handler = async (): Promise<APIGatewayProxyResult> => {
 
     return {
         statusCode: 200,
+        headers: getCorsHeaders(),
         body: JSON.stringify(allPlaylistsResponse),
     };
 };
