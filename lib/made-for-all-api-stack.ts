@@ -95,8 +95,8 @@ export class MadeForAllApiStack extends cdk.Stack {
         const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api", {
             defaultCorsPreflightOptions: {
                 allowOrigins: [
-                    `${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
-                    `*.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+                    `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+                    `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                 ],
             },
         });
