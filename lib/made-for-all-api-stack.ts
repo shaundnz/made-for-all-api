@@ -86,7 +86,6 @@ export class MadeForAllApiStack extends cdk.Stack {
         table.grantReadWriteData(deleteTrackedPlaylistLambda);
 
         const certificateArn = process.env.AWS_CERTIFICATE_ARN || "";
-
         const certificate = acm.Certificate.fromCertificateArn(
             this,
             "MadeForAllCertificate",
