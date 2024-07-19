@@ -1,5 +1,6 @@
 import "dotenv/config";
 import * as cdk from "aws-cdk-lib";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import { Construct } from "constructs";
 
 export class MadeForAllApiStack extends cdk.Stack {
@@ -84,7 +85,32 @@ export class MadeForAllApiStack extends cdk.Stack {
         table.grantReadWriteData(updateTrackedPlaylistLambda);
         table.grantReadWriteData(deleteTrackedPlaylistLambda);
 
-        const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api");
+        const certificateArn = process.env.AWS_CERTIFICATE_ARN || "";
+        const certificate = acm.Certificate.fromCertificateArn(
+            this,
+            "MadeForAllCertificate",
+            certificateArn
+        );
+
+        const api = new cdk.aws_apigateway.RestApi(this, "made-for-all-api", {
+            defaultCorsPreflightOptions: {
+                allowOrigins: ["http://localhost:5173"],
+            },
+        });
+
+        const domain = new cdk.aws_apigateway.DomainName(
+            this,
+            "MadeForAllApiDomain",
+            {
+                domainName: process.env.MADE_FOR_ALL_API_BASE_URL || "",
+                certificate,
+            }
+        );
+
+        new cdk.aws_apigateway.BasePathMapping(this, "MadeForAllApiMapping", {
+            domainName: domain,
+            restApi: api,
+        });
 
         // /playlists
         const playlists = api.root.addResource("playlists");
@@ -124,8 +150,6 @@ export class MadeForAllApiStack extends cdk.Stack {
                 deleteTrackedPlaylistLambda
             )
         );
-
-        new cdk.CfnOutput(this, "MadeForAllApi", { value: api.url });
     }
 
     private getLambdaEnvVariables(

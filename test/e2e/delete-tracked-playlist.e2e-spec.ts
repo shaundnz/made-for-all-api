@@ -12,7 +12,7 @@ describe("DELETE /playlists/:id", () => {
 
     beforeAll(async () => {
         await delayTestSuiteStart();
-        api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
+        api = supertest(`https://${process.env.MADE_FOR_ALL_API_BASE_URL}`);
         madeForAllApi = new MadeForAllApiUtils(api);
         // Create a playlist
         const response = await madeForAllApi.createPlaylist({

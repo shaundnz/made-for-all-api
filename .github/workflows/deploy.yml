@@ -18,12 +18,17 @@ on:
         required: true
       SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
         required: true
+      AWS_CERTIFICATE_ARN:
+        required: true
 
 jobs:
   deploy:
     name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+
+    env:
+      MADE_FOR_ALL_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
 
     steps:
       - name: Checkout
@@ -46,19 +51,17 @@ jobs:
 
       - name: Synth stack
         run: cdk synth
+        env:
+          AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
 
       - name: Deploy stack
-        run: cdk deploy --require-approval never --outputs-file cdk-deploy-output.json
+        run: cdk deploy --require-approval never
         env:
           DYNAMO_ENDPOINT: ${{ secrets.DYNAMO_ENDPOINT }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
-
-      - name: Set deployed URL in environment
-        run: |
-          export MADE_FOR_ALL_API_BASE_URL=$(jq -r '.MadeForAllApiStack.MadeForAllApi' cdk-deploy-output.json)
-          echo "MADE_FOR_ALL_API_BASE_URL=$MADE_FOR_ALL_API_BASE_URL" >> $GITHUB_ENV
+          AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
 
       - name: Run E2E tests
         run: npm run test:e2e

@@ -22,7 +22,7 @@ describe("PUT /playlists", () => {
 
     beforeAll(async () => {
         await delayTestSuiteStart();
-        api = supertest(process.env.MADE_FOR_ALL_API_BASE_URL);
+        api = supertest(`https://${process.env.MADE_FOR_ALL_API_BASE_URL}`);
         madeForAllApiUtils = new MadeForAllApiUtils(api);
         spotifyApiUtils = new SpotifyApiUtils();
 
