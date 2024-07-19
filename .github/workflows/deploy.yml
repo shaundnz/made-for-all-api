@@ -55,7 +55,7 @@ jobs:
           AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
 
       - name: Deploy stack
-        run: cdk deploy --require-approval never --outputs-file
+        run: cdk deploy --require-approval never
         env:
           DYNAMO_ENDPOINT: ${{ secrets.DYNAMO_ENDPOINT }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
