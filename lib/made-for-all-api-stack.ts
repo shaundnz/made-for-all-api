@@ -85,7 +85,7 @@ export class MadeForAllApiStack extends cdk.Stack {
         table.grantReadWriteData(updateTrackedPlaylistLambda);
         table.grantReadWriteData(deleteTrackedPlaylistLambda);
 
-        const certificateArn = process.env.AWS_CERTIFICATE_ARN;
+        const certificateArn = process.env.AWS_CERTIFICATE_ARN || "";
 
         const certificate = acm.Certificate.fromCertificateArn(
             this,
@@ -103,7 +103,7 @@ export class MadeForAllApiStack extends cdk.Stack {
             this,
             "MadeForAllApiDomain",
             {
-                domainName: process.env.MADE_FOR_ALL_API_BASE_URL,
+                domainName: process.env.MADE_FOR_ALL_API_BASE_URL || "",
                 certificate,
             }
         );
