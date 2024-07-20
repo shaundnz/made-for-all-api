@@ -37,7 +37,11 @@ export const getCorsHeaders = (
     const allowedDomains = [
         `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
         `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
+        "http://localhost:5173",
+        "http://localhost:4173",
     ];
+
+    console.log(origin);
 
     if (allowedDomains.findIndex((domain) => domain === origin) === -1) {
         return {};

@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to AWS
     uses: ./.github/workflows/deploy.yml
     permissions:
       id-token: write
@@ -21,3 +21,16 @@ jobs:
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
       SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
       AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
+
+  e2e-tests:
+    name: Run E2E Tests
+    needs: deploy
+    uses: ./.github/workflows/e2e-tests.yml
+    permissions:
+      contents: read
+    with:
+      environment: prod
+    secrets:
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
