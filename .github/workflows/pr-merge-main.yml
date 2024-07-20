@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to AWS
     uses: ./.github/workflows/deploy.yml
     permissions:
       id-token: write
