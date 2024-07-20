@@ -25,11 +25,13 @@ jobs:
 
     defaults:
       run:
-        working-directory: api
+        working-directory: ./api
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: api
 
       - name: Clean install dependencies
         run: npm ci
@@ -52,13 +54,14 @@ jobs:
 
     defaults:
       run:
-        working-directory: client
+        working-directory: ./client
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: shaundnz/made-for-all-client
+          path: client
 
       - name: Clean install dependencies
         run: npm ci
