@@ -49,7 +49,7 @@ jobs:
     environment: ${{ inputs.environment }}
 
     env:
-      VITE_APP_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
+      VITE_APP_API_BASE_URL: "https://${{ vars.MADE_FOR_ALL_API_BASE_URL }}"
       VITE_APP_BASE_URL: ${{ vars.MADE_FOR_ALL_CLIENT_BASE_URL }}
 
     defaults:
