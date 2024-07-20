@@ -96,6 +96,8 @@ export class MadeForAllApiStack extends cdk.Stack {
             defaultCorsPreflightOptions: {
                 allowOrigins: [
                     // Allows the OPTIONS header, but nothing else, CORS headers still need to be added manually in the lamdba
+                    "http://localhost:5173",
+                    "http://localhost:4173",
                     `https://${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                     `https://www.${process.env.MADE_FOR_ALL_CLIENT_BASE_URL}`,
                 ],

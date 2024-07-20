@@ -1,0 +1,70 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: environment to deploy to
+        required: true
+    secrets:
+      SPOTIFY_CLIENT_ID:
+        required: true
+      SPOTIFY_CLIENT_SECRET:
+        required: true
+      SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN:
+        required: true
+
+jobs:
+  e2e-tests-api:
+    name: "Environment: ${{ inputs.environment }} - API"
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    env:
+      MADE_FOR_ALL_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
+      MADE_FOR_ALL_CLIENT_BASE_URL: ${{ vars.MADE_FOR_ALL_CLIENT_BASE_URL }}
+
+    defaults:
+      run:
+        working-directory: ./api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clean install dependencies
+        run: npm ci
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN: ${{ secrets.SPOTIFY_MADE_FOR_ALL_USER_REFRESH_TOKEN }}
+
+  e2e-tests-client:
+    name: "Environment: ${{ inputs.environment }} - Client"
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    env:
+      VITE_APP_API_BASE_URL: ${{ vars.MADE_FOR_ALL_API_BASE_URL }}
+      VITE_APP_BASE_URL: ${{ vars.MADE_FOR_ALL_CLIENT_BASE_URL }}
+
+    defaults:
+      run:
+        working-directory: ./client
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: shaundnz/made-for-all-client
+
+      - name: Clean install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
