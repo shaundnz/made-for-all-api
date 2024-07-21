@@ -85,6 +85,7 @@ The API built on my last experience with API gateway and Lambdas - [Gitify](http
 ### Future Improvements
 
 - [ ] Cron job to handle regular updating of tracked playlists
+- [ ] Sync playlist cover images
 - [ ] Add a admin panel for managing tracked playlists
 - [ ] Add OAuth with Spotify provider to connect playlists directly to user accounts
 
